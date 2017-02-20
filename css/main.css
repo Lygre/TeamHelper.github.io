@@ -1,0 +1,10 @@
+.scroll-wrapper {
+    overflow-y: auto;
+    height: 90vh;
+}
+
+#submit {
+    margin-top: 25px;
+    position: relative;
+    left: 40%;
+}
