@@ -37,6 +37,10 @@ function parseInput() {
             team[i] = parsePokemon(mons[i]);
         }
     }
+    if(team.length > 6) {
+        alert("Too many pokemon");
+        return;
+    }
     for (var j = 0; j < team.length; j++) {
         if (j === 0) {
             setWeaknesses(team[j].weaknesses, true);
