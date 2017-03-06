@@ -17,6 +17,8 @@
 <!--Import jQuery before materialize.js-->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="js/materialize.min.js"></script>
+<script type="text/javascript" src="js/pokedex.js"></script>
+<script type="text/javascript" src="js/typechart.js"></script>
 <script type="text/javascript" src="js/parser.js"></script>
 
 <div class="row">
@@ -31,7 +33,9 @@
                 </div>
             </form>
         </div>
-        <button class="btn waves-effect waves-light center" id="submit" type="submit" name="action" onClick="getInfo()">Submit</button>
+        <button class="btn waves-effect waves-light center" id="submit" type="submit" name="action"
+                onClick="parseInput()">Submit
+        </button>
     </div>
     <h4 class="center-align">Output</h4>
     <div id="tabs-wrapper" class="col s12 m6">
@@ -40,7 +44,7 @@
                 <a href="#overview">Overview</a>
             </li>
             <li class="tab col s3">
-                <a href="#matchups">Matchups</a>
+                <a href="#matchups">Weaknesses</a>
             </li>
             <li class="tab col s3">
                 <a href="#coverage">Coverage</a>
