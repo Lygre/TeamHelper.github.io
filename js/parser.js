@@ -28,6 +28,8 @@ var immune = 3;
 
 function parseInput() {
     var input = document.getElementById("team-input").value;
+    resetWeaknessTable();
+    team = [];
 
     var mons = input.split("\n\n");
     for (var i = 0; i < mons.length; i++) {
@@ -42,7 +44,6 @@ function parseInput() {
             setWeaknesses(team[j].weaknesses, false);
         }
     }
-    console.log(teamWeaknesses);
     populateWeaknessTable();
 }
 
@@ -193,6 +194,7 @@ function populateWeaknessTable() {
     for (var i = 0; i < team.length; i++) {
         var pos = i + 1;
         var pokemon = team[i];
+        // console.log(pokemon.name);
         document.getElementById("mon" + pos + "Label").innerHTML = dex[pokemon.name].species;
 
         for (var type in pokemon.weaknesses) {
@@ -204,6 +206,19 @@ function populateWeaknessTable() {
     for (var totalType in teamWeaknesses) {
         if (pokemon.weaknesses.hasOwnProperty(totalType)) {
             document.getElementById(totalType.toLowerCase()).children[7].innerHTML = teamWeaknesses[totalType].toString();
+        }
+    }
+}
+
+function resetWeaknessTable() {
+    for (var i = 0; i < team.length; i++) {
+        var pos = i + 1;
+        var pokemon = team[i];
+        document.getElementById("mon" + pos + "Label").innerHTML = "";
+        for (var type in pokemon.weaknesses) {
+            if (pokemon.weaknesses.hasOwnProperty(type)) {
+                document.getElementById(type.toLowerCase()).children[pos].innerHTML = "";
+            }
         }
     }
 }
