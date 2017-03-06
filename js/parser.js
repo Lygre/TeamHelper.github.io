@@ -37,7 +37,7 @@ function parseInput() {
             team[i] = parsePokemon(mons[i]);
         }
     }
-    if(team.length > 6) {
+    if (team.length > 6) {
         alert("Too many pokemon");
         return;
     }
@@ -194,26 +194,6 @@ function setWeaknesses(matchups, reset) {
     }
 }
 
-function populateWeaknessTable() {
-    for (var i = 0; i < team.length; i++) {
-        var pos = i + 1;
-        var pokemon = team[i];
-        // console.log(pokemon.name);
-        document.getElementById("mon" + pos + "Label").innerHTML = dex[pokemon.name].species;
-
-        for (var type in pokemon.weaknesses) {
-            if (pokemon.weaknesses.hasOwnProperty(type)) {
-                document.getElementById(type.toLowerCase()).children[pos].innerHTML = pokemon.weaknesses[type].toString();
-            }
-        }
-    }
-    for (var totalType in teamWeaknesses) {
-        if (pokemon.weaknesses.hasOwnProperty(totalType)) {
-            document.getElementById(totalType.toLowerCase()).children[7].innerHTML = teamWeaknesses[totalType].toString();
-        }
-    }
-}
-
 function resetWeaknessTable() {
     for (var i = 0; i < team.length; i++) {
         var pos = i + 1;
@@ -224,5 +204,34 @@ function resetWeaknessTable() {
                 document.getElementById(type.toLowerCase()).children[pos].innerHTML = "";
             }
         }
+    }
+}
+
+function populateWeaknessTable() {
+    for (var i = 0; i < team.length; i++) {
+        var pos = i + 1;
+        var pokemon = team[i];
+        document.getElementById("mon" + pos + "Label").innerHTML = dex[pokemon.name].species;
+
+        for (var type in pokemon.weaknesses) {
+            if (pokemon.weaknesses.hasOwnProperty(type)) {
+                document.getElementById(type.toLowerCase()).children[pos].innerHTML = getLabel(pokemon.weaknesses[type]);
+            }
+        }
+    }
+    for (var totalType in teamWeaknesses) {
+        if (pokemon.weaknesses.hasOwnProperty(totalType)) {
+            document.getElementById(totalType.toLowerCase()).children[7].innerHTML = getLabel(teamWeaknesses[totalType]);
+        }
+    }
+}
+
+function getLabel(number) {
+    if (number === 0) {
+        return "Immune"
+    } else if (number > 0) {
+        return number + "x Weak"
+    } else if (number < 0) {
+        return -number + "x Resist"
     }
 }
