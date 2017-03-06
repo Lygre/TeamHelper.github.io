@@ -229,6 +229,8 @@ function populateWeaknessTable() {
 function getLabel(number) {
     if (number === 0) {
         return "Immune"
+    } else if(number === 1) {
+        return "Neutral"
     } else if (number > 0) {
         return number + "x Weak"
     } else if (number < 0) {
