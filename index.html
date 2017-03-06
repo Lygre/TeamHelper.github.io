@@ -14,32 +14,19 @@
 </head>
 
 <body>
-<!--Import jQuery before materialize.js-->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="js/materialize.min.js"></script>
+
 <script type="text/javascript" src="js/pokedex.js"></script>
 <script type="text/javascript" src="js/typechart.js"></script>
 <script type="text/javascript" src="js/parser.js"></script>
 
 <div class="row">
-    <div class="col s12 m6">
-        <div class="scroll-wrapper">
-            <form>
-                <div class="row">
-                    <div class="input-field">
-                        <textarea id="team-input" class="materialize-textarea"></textarea>
-                        <label for="team-input">Team Input</label>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <button class="btn waves-effect waves-light center" id="submit" type="submit" name="action"
-                onClick="parseInput()">Submit
-        </button>
-    </div>
-    <h4 class="center-align">Output</h4>
-    <div id="tabs-wrapper" class="col s12 m6">
-        <ul class="tabs tabs-fixed-width">
+    <div id="tabs-wrapper" class="col s12">
+        <ul class="tabs">
+            <li class="tab col s3">
+                <a href="#input">Team</a>
+            </li>
             <li class="tab col s3">
                 <a href="#overview">Overview</a>
             </li>
@@ -51,12 +38,232 @@
             </li>
         </ul>
     </div>
-    <div id="overview"></div>
-    <div id="matchups"></div>
-    <div id="coverage">
-        <h4 class="center-align" style="margin-top:100px">Coming Soon!</h4>
-    </div>
 </div>
 
+<div id="input">
+    <div class="row">
+        <div class="col s12 m6 offset-m3">
+            <div class="scroll-wrapper">
+                <form>
+                    <div class="row">
+                        <div class="input-field">
+                            <textarea id="team-input" class="materialize-textarea"></textarea>
+                            <label for="team-input">Team Input</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <button class="btn waves-effect waves-light center" id="submit" type="submit" name="action"
+                    onClick="parseInput()">Submit
+            </button>
+        </div>
+    </div>
+</div>
+<div id="overview">
+    <h4 class="center-align" style="margin-top:100px">Coming Soon</h4>
+</div>
+<div id="matchups">
+    <div class="row">
+        <table class="striped responsive-table">
+            <thead>
+            <tr>
+                <th data-field="typeLabel">Type</th>
+                <th id="mon1Label" data-field="mon1"></th>
+                <th id="mon2Label" data-field="mon2"></th>
+                <th id="mon3Label" data-field="mon3"></th>
+                <th id="mon4Label" data-field="mon4"></th>
+                <th id="mon5Label" data-field="mon5"></th>
+                <th id="mon6Label" data-field="mon6"></th>
+                <th id="totalLabel" data-field="total">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr id="bug">
+                <td><span class="type bug">Bug</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="dark">
+                <td><span class="type dark">Dark</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="dragon">
+                <td><span class="type dragon">Dragon</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="electric">
+                <td><span class="type electric">Electric</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="fairy">
+                <td><span class="type fairy">Fairy</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="fighting">
+                <td><span class="type fighting">Fighting</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="fire">
+                <td><span class="type fire">Fire</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="flying">
+                <td><span class="type flying">Flying</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="ghost">
+                <td><span class="type ghost">Ghost</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="grass">
+                <td><span class="type grass">Grass</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="ground">
+                <td><span class="type ground">Ground</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="ice">
+                <td><span class="type ice">Ice</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="normal">
+                <td><span class="type normal">Normal</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="poison">
+                <td><span class="type poison">Poison</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="psychic">
+                <td><span class="type psychic">Psychic</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="rock">
+                <td><span class="type rock">Rock</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="steel">
+                <td><span class="type steel">Steel</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            <tr id="water">
+                <td><span class="type water">Water</span></td>
+                <td><span class="mon1"></span></td>
+                <td><span class="mon2"></span></td>
+                <td><span class="mon3"></span></td>
+                <td><span class="mon4"></span></td>
+                <td><span class="mon5"></span></td>
+                <td><span class="mon6"></span></td>
+                <td><span class="total"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="coverage">
+    <h4 class="center-align" style="margin-top:100px">Coming Soon</h4>
+</div>
 </body>
 </html>

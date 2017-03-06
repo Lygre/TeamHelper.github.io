@@ -6,6 +6,7 @@
 # User-specific stuff:
 .idea/workspace.xml
 .idea/tasks.xml
+.idea/dictionaries
 
 # Sensitive or high-churn files:
 .idea/dataSources/
@@ -43,6 +44,5 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-.gitignore
 .idea/TeamHelper.iml
 .idea/modules.xml

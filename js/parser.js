@@ -1,4 +1,4 @@
-var weaknesses = {
+var teamWeaknesses = {
     Bug: 0,
     Dark: 0,
     Dragon: 0,
@@ -28,6 +28,8 @@ var immune = 3;
 
 function parseInput() {
     var input = document.getElementById("team-input").value;
+    resetWeaknessTable();
+    team = [];
 
     var mons = input.split("\n\n");
     for (var i = 0; i < mons.length; i++) {
@@ -35,20 +37,26 @@ function parseInput() {
             team[i] = parsePokemon(mons[i]);
         }
     }
+    if(team.length > 6) {
+        alert("Too many pokemon");
+        return;
+    }
     for (var j = 0; j < team.length; j++) {
         if (j === 0) {
-            setWeaknesses(team[j].name, true);
+            setWeaknesses(team[j].weaknesses, true);
         } else {
-            setWeaknesses(team[j].name, false);
+            setWeaknesses(team[j].weaknesses, false);
         }
     }
-    console.log(weaknesses);
+    populateWeaknessTable();
 }
 
 function parsePokemon(raw) {
     var lines = raw.split("\n");
 
     var name = lines[0].substring(0, lines[0].indexOf(" ")).toLowerCase().replace("-", "");
+    var types = dex[name].types;
+    var weaknesses = getPokemonWeaknesses(name);
     var object = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
     var ability = lines[1].substring(lines[1].indexOf(" "), lines[1].length);
     var move1 = lines[4].substring(lines[4].indexOf("-") + 1, lines[4].length);
@@ -58,6 +66,8 @@ function parsePokemon(raw) {
 
     return {
         name: name,
+        types: types,
+        weaknesses: weaknesses,
         object: object,
         ability: ability,
         move1: move1,
@@ -67,17 +77,8 @@ function parsePokemon(raw) {
     }
 }
 
-function setWeaknesses(pokemonName, reset) {
+function getPokemonWeaknesses(pokemonName) {
     var mon = dex[pokemonName];
-    var typeCharts = [];
-    typeCharts[0] = typechart[mon.types[0]].damageTaken;
-    if (mon.types.length > 1) {
-        typeCharts[1] = typechart[mon.types[1]].damageTaken;
-    }
-    convertWeaknesses(typeCharts, reset);
-}
-
-function convertWeaknesses(typeCharts, reset) {
     var pokemonWeakness = {
         Bug: 0,
         Dark: 0,
@@ -98,7 +99,8 @@ function convertWeaknesses(typeCharts, reset) {
         Steel: 0,
         Water: 0
     };
-    var type1Chart = typeCharts[0];
+
+    var type1Chart = typechart[mon.types[0]].damageTaken;
     for (var type1 in type1Chart) {
         if (type1Chart.hasOwnProperty(type1)) {
             if (pokemonWeakness.hasOwnProperty(type1)) {
@@ -115,8 +117,9 @@ function convertWeaknesses(typeCharts, reset) {
             }
         }
     }
-    if (typeCharts.length > 1) {
-        var type2Chart = typeCharts[1];
+
+    if (mon.types.length > 1) {
+        var type2Chart = typechart[mon.types[1]].damageTaken;
         for (var type2 in type2Chart) {
             if (type2Chart.hasOwnProperty(type2)) {
                 if (pokemonWeakness.hasOwnProperty(type2)) {
@@ -149,37 +152,41 @@ function convertWeaknesses(typeCharts, reset) {
         }
     }
 
+    return pokemonWeakness;
+}
+
+function setWeaknesses(matchups, reset) {
     if (reset) {
-        for (var type in weaknesses) {
-            if (weaknesses.hasOwnProperty(type)) {
-                if (pokemonWeakness.hasOwnProperty(type)) {
-                    weaknesses[type] = pokemonWeakness[type];
+        for (var type in teamWeaknesses) {
+            if (teamWeaknesses.hasOwnProperty(type)) {
+                if (matchups.hasOwnProperty(type)) {
+                    teamWeaknesses[type] = matchups[type];
                 }
             }
         }
     } else {
-        for (var addType in weaknesses) {
-            if (weaknesses.hasOwnProperty(addType)) {
-                if (pokemonWeakness.hasOwnProperty(addType)) {
-                    var base = weaknesses[addType];
-                    var add = pokemonWeakness[addType];
+        for (var addType in teamWeaknesses) {
+            if (teamWeaknesses.hasOwnProperty(addType)) {
+                if (matchups.hasOwnProperty(addType)) {
+                    var base = teamWeaknesses[addType];
+                    var add = matchups[addType];
 
                     if (base !== 0 && base !== 1 && add !== 1) {
                         if (add === 0) {
-                            weaknesses[addType] = 0;
+                            teamWeaknesses[addType] = 0;
                         } else if (base + add === 0) {
-                            weaknesses[addType] = 1;
+                            teamWeaknesses[addType] = 1;
                         } else if (base + add === 3) {
-                            weaknesses[addType] = 2;
+                            teamWeaknesses[addType] = 2;
                         } else if (base + add === -1) {
-                            weaknesses[addType] = -2;
+                            teamWeaknesses[addType] = -2;
                         } else {
-                            weaknesses[addType] = base + add;
+                            teamWeaknesses[addType] = base + add;
                         }
                     } else if (base === 1) {
-                        weaknesses[addType] = add;
+                        teamWeaknesses[addType] = add;
                     } else if (add === 1) {
-                        weaknesses[addType] = base;
+                        teamWeaknesses[addType] = base;
                     }
                 }
             }
@@ -187,21 +194,35 @@ function convertWeaknesses(typeCharts, reset) {
     }
 }
 
-/*
- Bug: -2
- Dark: 2
- Fairy: 2
- Fighting: 0
- Fire: 4
- Flying: 4
- Ghost: 0
- Grass: -2
- Ground: -2
- Ice: -2
- Normal: 0
- Poison: -4
- Psychic: 1
- Rock: 4
- Steel: 4
- Water: 2
- */
+function populateWeaknessTable() {
+    for (var i = 0; i < team.length; i++) {
+        var pos = i + 1;
+        var pokemon = team[i];
+        // console.log(pokemon.name);
+        document.getElementById("mon" + pos + "Label").innerHTML = dex[pokemon.name].species;
+
+        for (var type in pokemon.weaknesses) {
+            if (pokemon.weaknesses.hasOwnProperty(type)) {
+                document.getElementById(type.toLowerCase()).children[pos].innerHTML = pokemon.weaknesses[type].toString();
+            }
+        }
+    }
+    for (var totalType in teamWeaknesses) {
+        if (pokemon.weaknesses.hasOwnProperty(totalType)) {
+            document.getElementById(totalType.toLowerCase()).children[7].innerHTML = teamWeaknesses[totalType].toString();
+        }
+    }
+}
+
+function resetWeaknessTable() {
+    for (var i = 0; i < team.length; i++) {
+        var pos = i + 1;
+        var pokemon = team[i];
+        document.getElementById("mon" + pos + "Label").innerHTML = "";
+        for (var type in pokemon.weaknesses) {
+            if (pokemon.weaknesses.hasOwnProperty(type)) {
+                document.getElementById(type.toLowerCase()).children[pos].innerHTML = "";
+            }
+        }
+    }
+}
