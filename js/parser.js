@@ -1,3 +1,5 @@
+var typeList = ["Bug", "Dark", "Dragon", "Electric", "Fairy", "Fighting", "Fire", "Flying",
+    "Ghost", "Grass", "Ground", "Ice", "Normal", "Poison", "Psychic", "Rock", "Steel", "Water"];
 var teamWeaknesses = {
     Bug: 0,
     Dark: 0,
@@ -20,7 +22,6 @@ var teamWeaknesses = {
 };
 var team = [];
 
-
 var neutral = 0;
 var weak = 1;
 var resist = 2;
@@ -29,6 +30,7 @@ var immune = 3;
 function parseInput() {
     var input = document.getElementById("team-input").value;
     resetWeaknessTable();
+    resetTypeCoverageTable();
     team = [];
 
     var mons = input.split("\n\n");
@@ -49,6 +51,7 @@ function parseInput() {
         }
     }
     populateWeaknessTable();
+    populateTypeCoverageTable();
 }
 
 function parsePokemon(raw) {
@@ -100,7 +103,7 @@ function getPokemonWeaknesses(pokemonName) {
         Water: 0
     };
 
-    var type1Chart = typechart[mon.types[0]].damageTaken;
+    var type1Chart = typeMatchups[mon.types[0]].damageTaken;
     for (var type1 in type1Chart) {
         if (type1Chart.hasOwnProperty(type1)) {
             if (pokemonWeakness.hasOwnProperty(type1)) {
@@ -119,7 +122,7 @@ function getPokemonWeaknesses(pokemonName) {
     }
 
     if (mon.types.length > 1) {
-        var type2Chart = typechart[mon.types[1]].damageTaken;
+        var type2Chart = typeMatchups[mon.types[1]].damageTaken;
         for (var type2 in type2Chart) {
             if (type2Chart.hasOwnProperty(type2)) {
                 if (pokemonWeakness.hasOwnProperty(type2)) {
@@ -226,12 +229,96 @@ function populateWeaknessTable() {
     }
 }
 
+function resetTypeCoverageTable() {
+    var types = document.getElementsByClassName("material-icons");
+    for (var element in types) {
+        if (types.hasOwnProperty(element)) {
+            types[element].innerHTML = "cancel";
+            types[element].style.color = "red";
+        }
+    }
+}
+
+function populateTypeCoverageTable() {
+    var hasMoveType = {
+        Bug: false,
+        Dark: false,
+        Dragon: false,
+        Electric: false,
+        Fairy: false,
+        Fighting: false,
+        Fire: false,
+        Flying: false,
+        Ghost: false,
+        Grass: false,
+        Ground: false,
+        Ice: false,
+        Normal: false,
+        Poison: false,
+        Psychic: false,
+        Rock: false,
+        Steel: false,
+        Water: false
+    };
+    for (var pokemon in team) {
+        if (team.hasOwnProperty(pokemon)) {
+            var move1Name = team[pokemon].move1.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+            var move1 = movedex[move1Name];
+            if (move1.basePower !== 0) {
+                hasMoveType[move1.type] = true;
+            }
+            var move2Name = team[pokemon].move2.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+            var move2 = movedex[move2Name];
+            if (move2.basePower !== 0) {
+                hasMoveType[move2.type] = true;
+            }
+            var move3Name = team[pokemon].move3.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+            var move3 = movedex[move3Name];
+            if (move3.basePower !== 0) {
+                hasMoveType[move3.type] = true;
+            }
+            var move4Name = team[pokemon].move4.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+            var move4 = movedex[move4Name];
+            if (move4.basePower !== 0) {
+                hasMoveType[move4.type] = true;
+            }
+        }
+    }
+    for (var type in typeList) {
+        var weaknessList = weaknesses[typeList[type]];
+        for (var currTypeWeakness in weaknessList) {
+            if (weaknessList[currTypeWeakness]) {
+                if (hasMoveType[currTypeWeakness]) {
+                    setTypeCoverage(typeList[type]);
+                }
+            }
+        }
+    }
+}
+
+function setTypeCoverage(type) {
+    var span = document.getElementById(type.toLowerCase() + "Coverage");
+    span.innerHTML = "check circle";
+    span.style.color = "green";
+}
+
 function getLabel(number) {
     if (number === 0) {
         return "Immune"
+    } else if (number === 1) {
+        return "Neutral"
     } else if (number > 0) {
         return number + "x Weak"
     } else if (number < 0) {
         return -number + "x Resist"
     }
 }
+
+//Thanks Stack Overflow
+String.prototype.replaceAll = function (search, replace) {
+    if (replace === undefined) {
+        return this.toString();
+    }
+
+    return this.replace(new RegExp('[' + search + ']', 'g'), replace);
+};
