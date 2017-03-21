@@ -11,6 +11,10 @@ td {
     display: none;
 }
 
+span {
+	font-family:inherit;
+}
+
 .type {
     height: 1.5em;
     text-shadow: 1px 1px 1px #333;
