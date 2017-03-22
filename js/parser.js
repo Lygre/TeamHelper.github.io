@@ -52,26 +52,39 @@ function parseInput() {
     }
     populateWeaknessTable();
     populateTypeCoverageTable();
+    populateOverview();
 }
 
 function parsePokemon(raw) {
     var lines = raw.split("\n");
 
-    var name = lines[0].substring(0, lines[0].indexOf(" ")).toLowerCase().replace("-", "");
+    var name = lines[0];
+    if (name.indexOf("(") > -1) {
+        name = name.substring(name.indexOf("(") + 1, name.indexOf(")")).toLowerCase().replaceAll("-", "");
+    } else {
+        name = lines[0].substring(0, lines[0].indexOf(" ")).toLowerCase().replaceAll("-", "");
+    }
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
-    var object = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
+    var item = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
     var ability = lines[1].substring(lines[1].indexOf(" "), lines[1].length);
-    var move1 = lines[4].substring(lines[4].indexOf("-") + 1, lines[4].length);
-    var move2 = lines[5].substring(lines[5].indexOf("-") + 1, lines[5].length);
-    var move3 = lines[6].substring(lines[6].indexOf("-") + 1, lines[6].length);
-    var move4 = lines[7].substring(lines[7].indexOf("-") + 1, lines[7].length);
+    var offset = 0;
+
+    if (lines[4].indexOf("-") < 0) {
+        offset = 1;
+    }
+
+    var move1 = lines[4 + offset].substring(lines[4 + offset].indexOf("-") + 1, lines[4 + offset].length);
+    var move2 = lines[5 + offset].substring(lines[5 + offset].indexOf("-") + 1, lines[5 + offset].length);
+    var move3 = lines[6 + offset].substring(lines[6 + offset].indexOf("-") + 1, lines[6 + offset].length);
+    var move4 = lines[7 + offset].substring(lines[7 + offset].indexOf("-") + 1, lines[7 + offset].length);
+
 
     return {
         name: name,
         types: types,
         weaknesses: weaknesses,
-        object: object,
+        item: item,
         ability: ability,
         move1: move1,
         move2: move2,
@@ -227,6 +240,10 @@ function populateWeaknessTable() {
             document.getElementById(totalType.toLowerCase()).children[7].innerHTML = getLabel(teamWeaknesses[totalType]);
         }
     }
+}
+
+function populateOverview() {
+    
 }
 
 function resetTypeCoverageTable() {

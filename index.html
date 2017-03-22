@@ -25,13 +25,10 @@
 <div class="row">
     <div id="tabs-wrapper" class="col s12">
         <ul class="tabs">
-            <li class="tab col s3">
+            <li class="tab col s4">
                 <a href="#input">Team</a>
             </li>
-            <li class="tab col s3">
-                <a href="#overview">Overview</a>
-            </li>
-            <li class="tab col s3">
+            <li class="tab col s4">
                 <a href="#matchups">Weaknesses</a>
             </li>
             <li class="tab col s3">
@@ -43,7 +40,7 @@
 
 <div id="input">
     <div class="row">
-        <div class="col s12 m6 offset-m3">
+        <div class="col s12 m6">
             <div class="scroll-wrapper">
                 <form>
                     <div class="row">
@@ -58,10 +55,28 @@
                     onClick="parseInput()">Submit
             </button>
         </div>
+        <div class="col s12 m6">
+            <div class="row">
+                <h5>You have:</h5>
+                <div class="col s12 m6">
+                    <ul style="list-style-type: none">
+                        <li><p><span id="2xWeak" class="count">0</span> 2x Weaknesses</p></li>
+                        <li><p><span id="4xWeak" class="count">0</span> 4x Weaknesses</p></li>
+                        <li><p><span id="8xWeak" class="count">0</span> 8x Weaknesses</p></li>
+                        <li><p><span id="16xWeak" class="count">0</span> 16x Weaknesses</p></li>
+                    </ul>
+                </div>
+                <div class="col s12 m6">
+                    <ul style="list-style-type: none">
+                        <li><p><span id="2xResist" class="count">0</span> 2x Resistances</p></li>
+                        <li><p><span id="4xResist" class="count">0</span> 4x Resistances</p></li>
+                        <li><p><span id="8xResist" class="count">0</span> 8x Resistances</p></li>
+                        <li><p><span id="16xResist" class="count">0</span> 16x Resistances</p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<div id="overview">
-    <h4 class="center-align" style="margin-top:100px">Coming Soon</h4>
 </div>
 <div id="matchups">
     <div class="row">

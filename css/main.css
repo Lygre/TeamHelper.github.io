@@ -12,7 +12,11 @@ td {
 }
 
 span {
-	font-family:inherit;
+    font-family: inherit;
+}
+
+.count {
+    font-weight: bold;
 }
 
 .type {
