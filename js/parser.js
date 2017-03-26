@@ -130,6 +130,11 @@ var weak = 1;
 var resist = 2;
 var immune = 3;
 
+function modifiersChecked() {
+    var checkbox = document.getElementById("baseOnlyCheckbox");
+    checkbox.checked = !checkbox.checked;
+}
+
 function parseInput() {
     var input = document.getElementById("team-input").value;
     resetWeaknessTable();
