@@ -53,6 +53,7 @@ function parseInput() {
     populateWeaknessTable();
     populateTypeCoverageTable();
     populateOverview();
+    populateStatTable();
 }
 
 function parsePokemon(raw) {
@@ -243,7 +244,136 @@ function populateWeaknessTable() {
 }
 
 function populateOverview() {
-    
+    var sixResist = 0;
+    var eightResist = 0;
+    var fourResist = 0;
+    var twoResist = 0;
+
+    var sixWeak = 0;
+    var eightWeak = 0;
+    var fourWeak = 0;
+    var twoWeak = 0;
+
+    var immune = 0;
+
+    for (var type in teamWeaknesses) {
+        var weakness = teamWeaknesses[type];
+        if (weakness < 0) {
+            if (weakness <= -16) {
+                sixResist++;
+            } else if (weakness <= -8) {
+                eightResist++;
+            } else if (weakness <= -4) {
+                fourResist++;
+            } else if (weakness <= -2) {
+                twoResist++;
+            }
+        } else if (weakness > 0) {
+            if (weakness >= 16) {
+                sixWeak++;
+            } else if (weakness >= 8) {
+                eightWeak++;
+            } else if (weakness >= 4) {
+                fourWeak++;
+            } else if (weakness >= 2) {
+                twoWeak++;
+            }
+        } else {
+            immune++;
+        }
+    }
+
+    document.getElementById("16xResist").innerHTML = sixResist.toString();
+    document.getElementById("8xResist").innerHTML = eightResist.toString();
+    document.getElementById("4xResist").innerHTML = fourResist.toString();
+    document.getElementById("2xResist").innerHTML = twoResist.toString();
+
+    document.getElementById("16xWeak").innerHTML = sixWeak.toString();
+    document.getElementById("8xWeak").innerHTML = eightWeak.toString();
+    document.getElementById("4xWeak").innerHTML = fourWeak.toString();
+    document.getElementById("2xWeak").innerHTML = twoWeak.toString();
+
+    document.getElementById("immune").innerHTML = immune.toString();
+}
+
+function populateStatTable() {
+    var table = document.getElementById("statTable");
+    var index = 1;
+
+    var hpTotal = 0;
+    var atkTotal = 0;
+    var defTotal = 0;
+    var spaTotal = 0;
+    var spdTotal = 0;
+    var speTotal = 0;
+    var bstTotal = 0;
+
+    for (var mon in team) {
+        var row = table.insertRow(index);
+        if(index % 2 === 0) {
+            row.style.backgroundColor = "#f2f2f2";
+        }
+        index++;
+
+        var fullMon = dex[team[mon].name];
+        var baseStats = fullMon.baseStats;
+
+        row.insertCell(0).innerHTML = fullMon.species;
+        row.insertCell(1).innerHTML = baseStats.hp;
+        row.insertCell(2).innerHTML = baseStats.atk;
+        row.insertCell(3).innerHTML = baseStats.def;
+        row.insertCell(4).innerHTML = baseStats.spa;
+        row.insertCell(5).innerHTML = baseStats.spd;
+        row.insertCell(6).innerHTML = baseStats.spe;
+
+        var bst = 0;
+        for (var stat in fullMon.baseStats) {
+            bst += baseStats[stat];
+        }
+        row.insertCell(7).innerHTML = bst.toString();
+
+        hpTotal += baseStats.hp;
+        atkTotal += baseStats.atk;
+        defTotal += baseStats.def;
+        spaTotal += baseStats.spa;
+        spdTotal += baseStats.spd;
+        speTotal += baseStats.spe;
+        bstTotal += bst;
+    }
+
+    var averageRow = table.insertRow(index);
+    if(index % 2 === 0) {
+        averageRow.style.backgroundColor = "#f2f2f2";
+    }
+    var averageLabel = averageRow.insertCell(0);
+    averageLabel.innerHTML = "Averages:";
+    averageLabel.style.fontWeight = "Bold";
+
+    averageRow.insertCell(1).innerHTML = (hpTotal/team.length).toString();
+    averageRow.insertCell(2).innerHTML = (atkTotal/team.length).toString();
+    averageRow.insertCell(3).innerHTML = (defTotal/team.length).toString();
+    averageRow.insertCell(4).innerHTML = (spaTotal/team.length).toString();
+    averageRow.insertCell(5).innerHTML = (spdTotal/team.length).toString();
+    averageRow.insertCell(6).innerHTML = (speTotal/team.length).toString();
+    averageRow.insertCell(7).innerHTML = (bstTotal/team.length).toString();
+
+    index++;
+
+    var totalRow = table.insertRow(index);
+    if(index % 2 === 0) {
+        totalRow.style.backgroundColor = "#f2f2f2";
+    }
+    var totalLabel = totalRow.insertCell(0);
+    totalLabel.innerHTML = "Totals:";
+    totalLabel.style.fontWeight = "Bold";
+
+    totalRow.insertCell(1).innerHTML = (hpTotal).toString();
+    totalRow.insertCell(2).innerHTML = (atkTotal).toString();
+    totalRow.insertCell(3).innerHTML = (defTotal).toString();
+    totalRow.insertCell(4).innerHTML = (spaTotal).toString();
+    totalRow.insertCell(5).innerHTML = (spdTotal).toString();
+    totalRow.insertCell(6).innerHTML = (speTotal).toString();
+    totalRow.insertCell(7).innerHTML = (bstTotal).toString();
 }
 
 function resetTypeCoverageTable() {

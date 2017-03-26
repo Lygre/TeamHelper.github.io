@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pokemon Team Analyzer</title>
+    <title>Pokémon Team Analyzer</title>
     <!--Import Google Icon Font-->
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
@@ -57,13 +57,14 @@
         </div>
         <div class="col s12 m6">
             <div class="row">
-                <h5>You have:</h5>
+                <h5>Your Weaknesses and Resistances:</h5>
                 <div class="col s12 m6">
                     <ul style="list-style-type: none">
                         <li><p><span id="2xWeak" class="count">0</span> 2x Weaknesses</p></li>
                         <li><p><span id="4xWeak" class="count">0</span> 4x Weaknesses</p></li>
                         <li><p><span id="8xWeak" class="count">0</span> 8x Weaknesses</p></li>
                         <li><p><span id="16xWeak" class="count">0</span> 16x Weaknesses</p></li>
+                        <li><p><span id="immune" class="count">0</span> Immunities</p></li>
                     </ul>
                 </div>
                 <div class="col s12 m6">
@@ -74,6 +75,22 @@
                         <li><p><span id="16xResist" class="count">0</span> 16x Resistances</p></li>
                     </ul>
                 </div>
+            </div>
+            <div class="row">
+                <table class="responsive-table striped" id="statTable">
+                    <thead>
+                    <tr>
+                        <th data-field="pokemonLabel">Pokémon</th>
+                        <th data-field="hp">Hp</th>
+                        <th data-field="atk">Atk</th>
+                        <th data-field="def">Def</th>
+                        <th data-field="spa">SpA</th>
+                        <th data-field="spd">SpD</th>
+                        <th data-field="spe">Spe</th>
+                        <th data-field="bst">BST</th>
+                    </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
