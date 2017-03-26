@@ -58,6 +58,7 @@ function parseInput() {
 
 function parsePokemon(raw) {
     var lines = raw.split("\n");
+    var offset = 0;
 
     var name = lines[0];
     if (name.indexOf("(") > -1) {
@@ -68,11 +69,33 @@ function parsePokemon(raw) {
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
     var item = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
-    var ability = lines[1].substring(lines[1].indexOf(" "), lines[1].length);
-    var offset = 0;
+    var ability = lines[1].substring(lines[1].indexOf(" ") + 1, lines[1].length);
 
-    if (lines[4].indexOf("-") < 0) {
-        offset = 1;
+    var level = 0;
+    if (lines[2].indexOf("/") < 0) {
+        console.log("not level 100");
+        level = lines[2].substring(lines[2].indexOf(" ") + 1);
+        offset++;
+    } else {
+        level = 100;
+    }
+
+    var evs = parseEVs(lines[2 + offset].substring(lines[2 + offset].indexOf(" ") + 1).split(" / "));
+    var nature = lines[3 + offset].substring(0, lines[3 + offset].indexOf(" "));
+
+    var ivs;
+    if (lines[4 + offset].indexOf("/") < 0) {
+        ivs = {
+            hp: 31,
+            atk: 31,
+            def: 31,
+            spa: 31,
+            spd: 31,
+            spe: 31
+        };
+    } else {
+        ivs = parseIVs(lines[4 + offset].substring(lines[4 + offset].indexOf(" ") + 1).split(" / "));
+        offset++;
     }
 
     var move1 = lines[4 + offset].substring(lines[4 + offset].indexOf("-") + 1, lines[4 + offset].length);
@@ -80,17 +103,93 @@ function parsePokemon(raw) {
     var move3 = lines[6 + offset].substring(lines[6 + offset].indexOf("-") + 1, lines[6 + offset].length);
     var move4 = lines[7 + offset].substring(lines[7 + offset].indexOf("-") + 1, lines[7 + offset].length);
 
-
     return {
         name: name,
+        level: level,
         types: types,
         weaknesses: weaknesses,
         item: item,
         ability: ability,
+        nature: nature,
+        evs: evs,
+        ivs: ivs,
         move1: move1,
         move2: move2,
         move3: move3,
         move4: move4
+    }
+}
+
+function parseEVs(rawEVs) {
+    var outputEVs = {
+        hp: 0,
+        atk: 0,
+        def: 0,
+        spa: 0,
+        spd: 0,
+        spe: 0
+    };
+
+    for (var index in rawEVs) {
+        var string = rawEVs[index].toLowerCase();
+
+        if (string.indexOf("hp") > -1) {
+            outputEVs.hp = parseInt(string.substring(0, string.indexOf(" ")));
+        } else if (string.indexOf("atk") > -1) {
+            outputEVs.atk = parseInt(string.substring(0, string.indexOf(" ")));
+        } else if (string.indexOf("def") > -1) {
+            outputEVs.def = parseInt(string.substring(0, string.indexOf(" ")));
+        } else if (string.indexOf("spa") > -1) {
+            outputEVs.spa = parseInt(string.substring(0, string.indexOf(" ")));
+        } else if (string.indexOf("spd") > -1) {
+            outputEVs.spd = parseInt(string.substring(0, string.indexOf(" ")));
+        } else if (string.indexOf("spe") > -1) {
+            outputEVs.spe = parseInt(string.substring(0, string.indexOf(" ")));
+        }
+    }
+
+    return outputEVs;
+}
+
+function parseIVs(rawIVs) {
+    var outputIVs = {
+        hp: 0,
+        atk: 0,
+        def: 0,
+        spa: 0,
+        spd: 0,
+        spe: 0
+    };
+
+    for (var index in rawIVs) {
+        var string = rawIVs[index].toLowerCase();
+
+        if (string.indexOf("hp") > -1) {
+            outputIVs.hp = parseInt(string.substring(0, string.indexOf(" ")));
+        } else if (string.indexOf("atk") > -1) {
+            outputIVs.atk = parseInt(string.substring(0, string.indexOf(" ")));
+        } else if (string.indexOf("def") > -1) {
+            outputIVs.def = parseInt(string.substring(0, string.indexOf(" ")));
+        } else if (string.indexOf("spa") > -1) {
+            outputIVs.spa = parseInt(string.substring(0, string.indexOf(" ")));
+        } else if (string.indexOf("spd") > -1) {
+            outputIVs.spd = parseInt(string.substring(0, string.indexOf(" ")));
+        } else if (string.indexOf("spe") > -1) {
+            outputIVs.spe = parseInt(string.substring(0, string.indexOf(" ")));
+        }
+    }
+    return outputIVs;
+}
+
+function calcStat(pokemon, stat, ev, iv) {
+    var b = dex[pokemon.name].baseStats[stat];
+    var i = iv;
+    var e = ev;
+    var l = pokemon.level;
+    if (stat === "hp") {
+        return Math.floor((2 * b + i + e) * l / 100 + l + 10);
+    } else {
+        return Math.floor(Math.floor((2 * b + i + e) * l / 100 + 5));
     }
 }
 
@@ -297,6 +396,8 @@ function populateOverview() {
 }
 
 function populateStatTable() {
+    var evIvMod = document.getElementById("evIvModCheckbox");
+    var baseOnly = document.getElementById("baseOnlyCheckbox");
     var table = document.getElementById("statTable");
     var index = 1;
 
@@ -310,57 +411,113 @@ function populateStatTable() {
 
     for (var mon in team) {
         var row = table.insertRow(index);
-        if(index % 2 === 0) {
+        if (index % 2 === 0) {
             row.style.backgroundColor = "#f2f2f2";
         }
         index++;
 
+        var basicMon = team[mon];
+        var evs = basicMon.evs;
+        var ivs = basicMon.ivs;
         var fullMon = dex[team[mon].name];
         var baseStats = fullMon.baseStats;
 
+        var actualHp = 0;
+        var actualAtk = 0;
+        var actualDef = 0;
+        var actualSpa = 0;
+        var actualSpd = 0;
+        var actualSpe = 0;
+
         row.insertCell(0).innerHTML = fullMon.species;
-        row.insertCell(1).innerHTML = baseStats.hp;
-        row.insertCell(2).innerHTML = baseStats.atk;
-        row.insertCell(3).innerHTML = baseStats.def;
-        row.insertCell(4).innerHTML = baseStats.spa;
-        row.insertCell(5).innerHTML = baseStats.spd;
-        row.insertCell(6).innerHTML = baseStats.spe;
+        if (!evIvMod.checked) { //Don't apply EV/IV modifiers
+            if (baseOnly.checked) {
+                row.insertCell(1).innerHTML = baseStats.hp;
+                row.insertCell(2).innerHTML = baseStats.atk;
+                row.insertCell(3).innerHTML = baseStats.def;
+                row.insertCell(4).innerHTML = baseStats.spa;
+                row.insertCell(5).innerHTML = baseStats.spd;
+                row.insertCell(6).innerHTML = baseStats.spe;
+
+                hpTotal += baseStats.hp;
+                atkTotal += baseStats.atk;
+                defTotal += baseStats.def;
+                spaTotal += baseStats.spa;
+                spdTotal += baseStats.spd;
+                speTotal += baseStats.spe;
+            } else {
+                actualHp = calcStat(basicMon, "hp", 0, 0);
+                actualAtk = calcStat(basicMon, "atk", 0, 0);
+                actualDef = calcStat(basicMon, "def", 0, 0);
+                actualSpa = calcStat(basicMon, "spa", 0, 0);
+                actualSpd = calcStat(basicMon, "spd", 0, 0);
+                actualSpe = calcStat(basicMon, "spe", 0, 0);
+
+                row.insertCell(1).innerHTML = actualHp.toString();
+                row.insertCell(2).innerHTML = actualAtk.toString();
+                row.insertCell(3).innerHTML = actualDef.toString();
+                row.insertCell(4).innerHTML = actualSpa.toString();
+                row.insertCell(5).innerHTML = actualSpd.toString();
+                row.insertCell(6).innerHTML = actualSpe.toString();
+
+                hpTotal += actualHp;
+                atkTotal += actualAtk;
+                defTotal += actualDef;
+                spaTotal += actualSpa;
+                spdTotal += actualSpd;
+                speTotal += actualSpe;
+            }
+        } else {
+            actualHp = calcStat(basicMon, "hp", evs.hp / 4, ivs.hp);
+            actualAtk = calcStat(basicMon, "atk", evs.atk / 4, ivs.atk);
+            actualDef = calcStat(basicMon, "def", evs.def / 4, ivs.def);
+            actualSpa = calcStat(basicMon, "spa", evs.spa / 4, ivs.spa);
+            actualSpd = calcStat(basicMon, "spd", evs.spd / 4, ivs.spd);
+            actualSpe = calcStat(basicMon, "spe", evs.spe / 4, ivs.spe);
+
+            row.insertCell(1).innerHTML = actualHp.toString();
+            row.insertCell(2).innerHTML = actualAtk.toString();
+            row.insertCell(3).innerHTML = actualDef.toString();
+            row.insertCell(4).innerHTML = actualSpa.toString();
+            row.insertCell(5).innerHTML = actualSpd.toString();
+            row.insertCell(6).innerHTML = actualSpe.toString();
+
+            hpTotal += actualHp;
+            atkTotal += actualAtk;
+            defTotal += actualDef;
+            spaTotal += actualSpa;
+            spdTotal += actualSpd;
+            speTotal += actualSpe;
+        }
 
         var bst = 0;
         for (var stat in fullMon.baseStats) {
             bst += baseStats[stat];
         }
         row.insertCell(7).innerHTML = bst.toString();
-
-        hpTotal += baseStats.hp;
-        atkTotal += baseStats.atk;
-        defTotal += baseStats.def;
-        spaTotal += baseStats.spa;
-        spdTotal += baseStats.spd;
-        speTotal += baseStats.spe;
         bstTotal += bst;
     }
 
     var averageRow = table.insertRow(index);
-    if(index % 2 === 0) {
+    if (index % 2 === 0) {
         averageRow.style.backgroundColor = "#f2f2f2";
     }
     var averageLabel = averageRow.insertCell(0);
     averageLabel.innerHTML = "Averages:";
     averageLabel.style.fontWeight = "Bold";
 
-    averageRow.insertCell(1).innerHTML = (hpTotal/team.length).toString();
-    averageRow.insertCell(2).innerHTML = (atkTotal/team.length).toString();
-    averageRow.insertCell(3).innerHTML = (defTotal/team.length).toString();
-    averageRow.insertCell(4).innerHTML = (spaTotal/team.length).toString();
-    averageRow.insertCell(5).innerHTML = (spdTotal/team.length).toString();
-    averageRow.insertCell(6).innerHTML = (speTotal/team.length).toString();
-    averageRow.insertCell(7).innerHTML = (bstTotal/team.length).toString();
+    averageRow.insertCell(1).innerHTML = (hpTotal / team.length).toString();
+    averageRow.insertCell(2).innerHTML = (atkTotal / team.length).toString();
+    averageRow.insertCell(3).innerHTML = (defTotal / team.length).toString();
+    averageRow.insertCell(4).innerHTML = (spaTotal / team.length).toString();
+    averageRow.insertCell(5).innerHTML = (spdTotal / team.length).toString();
+    averageRow.insertCell(6).innerHTML = (speTotal / team.length).toString();
+    averageRow.insertCell(7).innerHTML = (bstTotal / team.length).toString();
 
     index++;
 
     var totalRow = table.insertRow(index);
-    if(index % 2 === 0) {
+    if (index % 2 === 0) {
         totalRow.style.backgroundColor = "#f2f2f2";
     }
     var totalLabel = totalRow.insertCell(0);

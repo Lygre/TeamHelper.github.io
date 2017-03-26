@@ -57,7 +57,7 @@
         </div>
         <div class="col s12 m6">
             <div class="row">
-                <h5>Your Weaknesses and Resistances:</h5>
+                <h5>Weaknesses/Resistances:</h5>
                 <div class="col s12 m6">
                     <ul style="list-style-type: none">
                         <li><p><span id="2xWeak" class="count">0</span> 2x Weaknesses</p></li>
@@ -77,20 +77,41 @@
                 </div>
             </div>
             <div class="row">
-                <table class="responsive-table striped" id="statTable">
-                    <thead>
-                    <tr>
-                        <th data-field="pokemonLabel">Pokémon</th>
-                        <th data-field="hp">Hp</th>
-                        <th data-field="atk">Atk</th>
-                        <th data-field="def">Def</th>
-                        <th data-field="spa">SpA</th>
-                        <th data-field="spd">SpD</th>
-                        <th data-field="spe">Spe</th>
-                        <th data-field="bst">BST</th>
-                    </tr>
-                    </thead>
-                </table>
+                <h5>Stat spread:</h5>
+                <div class="switch padding-small">
+                    Base stats only?
+                    <label>
+                        No
+                        <input type="checkbox" id="baseOnlyCheckbox" checked="checked">
+                        <span class="lever"></span>
+                        Yes
+                    </label>
+                </div>
+                <div class="switch padding-small">
+                    Apply stat modifiers(EV/IV/Nature)?
+                    <label>
+                        No
+                        <input type="checkbox" id="evIvModCheckbox">
+                        <span class="lever"></span>
+                        Yes
+                    </label>
+                </div>
+                <div class="row">
+                    <table class="responsive-table" id="statTable">
+                        <thead>
+                        <tr>
+                            <th data-field="pokemonLabel">Pokémon</th>
+                            <th data-field="hp">Hp</th>
+                            <th data-field="atk">Atk</th>
+                            <th data-field="def">Def</th>
+                            <th data-field="spa">SpA</th>
+                            <th data-field="spd">SpD</th>
+                            <th data-field="spe">Spe</th>
+                            <th data-field="bst">BST</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
