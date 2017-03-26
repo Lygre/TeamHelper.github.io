@@ -1,5 +1,108 @@
 var typeList = ["Bug", "Dark", "Dragon", "Electric", "Fairy", "Fighting", "Fire", "Flying",
     "Ghost", "Grass", "Ground", "Ice", "Normal", "Poison", "Psychic", "Rock", "Steel", "Water"];
+var natureList = {
+    Hardy: {
+        atk: 1,
+        def: 1
+    },
+    lonely: {
+        atk: 1.1,
+        def: .9
+    },
+    brave: {
+        atk: 1.1,
+        spe: 0.9
+    },
+    adamant: {
+        atk: 1.1,
+        spa: 0.9
+    },
+    naughty: {
+        atk: 1.1,
+        spd: 0.9
+    },
+    docile: {
+        def: 1,
+        atk: 1
+    },
+    bold: {
+        def: 1.1,
+        atk: 0.9
+    },
+    relaxed: {
+        def: 1.1,
+        spe: 0.9
+    },
+    impish: {
+        def: 1.1,
+        spa: 0.9
+    },
+    lax: {
+        def: 1.1,
+        spd: 0.9
+    },
+    serious: {
+        spe: 1,
+        atk: 1
+    },
+    timid: {
+        spe: 1.1,
+        atk: 0.9
+    },
+    hasty: {
+        spe: 1.1,
+        def: 0.9
+    },
+    jolly: {
+        spe: 1.1,
+        spa: 0.9
+    },
+    naive: {
+        spe: 1.1,
+        spd: 0.9
+    },
+    bashful: {
+        spa: 1,
+        atk: 1
+    },
+    modest: {
+        spa: 1.1,
+        atk: 0.9
+    },
+    mild: {
+        spa: 1.1,
+        def: 0.9
+    },
+    quiet: {
+        spa: 1.1,
+        spe: 0.9
+    },
+    rash: {
+        spa: 1.1,
+        spd: 0.9
+    },
+    quirky: {
+        spd: 1,
+        atk: 1
+    },
+    calm: {
+        spd: 1.1,
+        atk: 0.9
+    },
+    gentle: {
+        spd: 1.1,
+        def: 0.9
+    },
+    sassy: {
+        spd: 1.1,
+        spe: 0.9
+    },
+    careful: {
+        spd: 1.1,
+        spa: 0.9
+    }
+};
+
 var teamWeaknesses = {
     Bug: 0,
     Dark: 0,
@@ -186,10 +289,17 @@ function calcStat(pokemon, stat, ev, iv) {
     var i = iv;
     var e = ev;
     var l = pokemon.level;
+    var n = 1;
+
+    var nature = natureList[pokemon.nature.toLowerCase()];
+    if(nature.hasOwnProperty(stat)) {
+        n = nature[stat];
+    }
+
     if (stat === "hp") {
         return Math.floor((2 * b + i + e) * l / 100 + l + 10);
     } else {
-        return Math.floor(Math.floor((2 * b + i + e) * l / 100 + 5));
+        return Math.floor(Math.floor((2 * b + i + e) * l / 100 + 5) * n);
     }
 }
 
