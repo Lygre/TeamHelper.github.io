@@ -11,8 +11,16 @@ td {
     display: none;
 }
 
+.padding-small {
+    padding: 10px 10px 10px 0;
+}
+
 span {
-	font-family:inherit;
+    font-family: inherit;
+}
+
+.count {
+    font-weight: bold;
 }
 
 .type {
