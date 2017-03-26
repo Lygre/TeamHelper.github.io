@@ -181,7 +181,6 @@ function parsePokemon(raw) {
 
     var level = 0;
     if (lines[2].indexOf("/") < 0) {
-        console.log("not level 100");
         level = lines[2].substring(lines[2].indexOf(" ") + 1);
         offset++;
     } else {
@@ -192,7 +191,10 @@ function parsePokemon(raw) {
     var nature = lines[3 + offset].substring(0, lines[3 + offset].indexOf(" "));
 
     var ivs;
-    if (lines[4 + offset].indexOf("/") < 0) {
+    if (lines[4 + offset].indexOf("-") < 0) {
+        ivs = parseIVs(lines[4 + offset].substring(lines[4 + offset].indexOf(" ") + 1).split(" / "));
+        offset++;
+    } else {
         ivs = {
             hp: 31,
             atk: 31,
@@ -201,9 +203,6 @@ function parsePokemon(raw) {
             spd: 31,
             spe: 31
         };
-    } else {
-        ivs = parseIVs(lines[4 + offset].substring(lines[4 + offset].indexOf(" ") + 1).split(" / "));
-        offset++;
     }
 
     var move1 = lines[4 + offset].substring(lines[4 + offset].indexOf("-") + 1, lines[4 + offset].length);
@@ -297,7 +296,7 @@ function calcStat(pokemon, stat, ev, iv) {
     var n = 1;
 
     var nature = natureList[pokemon.nature.toLowerCase()];
-    if(nature.hasOwnProperty(stat)) {
+    if (nature.hasOwnProperty(stat)) {
         n = nature[stat];
     }
 
@@ -513,8 +512,11 @@ function populateOverview() {
 function populateStatTable() {
     var evIvMod = document.getElementById("evIvModCheckbox");
     var baseOnly = document.getElementById("baseOnlyCheckbox");
-    var table = document.getElementById("statTable");
-    var index = 1;
+    var table = document.getElementById("statTableBody");
+
+    table.innerHTML = "";
+
+    var index = 0;
 
     var hpTotal = 0;
     var atkTotal = 0;
@@ -621,13 +623,13 @@ function populateStatTable() {
     averageLabel.innerHTML = "Averages:";
     averageLabel.style.fontWeight = "Bold";
 
-    averageRow.insertCell(1).innerHTML = (hpTotal / team.length).toString();
-    averageRow.insertCell(2).innerHTML = (atkTotal / team.length).toString();
-    averageRow.insertCell(3).innerHTML = (defTotal / team.length).toString();
-    averageRow.insertCell(4).innerHTML = (spaTotal / team.length).toString();
-    averageRow.insertCell(5).innerHTML = (spdTotal / team.length).toString();
-    averageRow.insertCell(6).innerHTML = (speTotal / team.length).toString();
-    averageRow.insertCell(7).innerHTML = (bstTotal / team.length).toString();
+    averageRow.insertCell(1).innerHTML = Math.floor((hpTotal / team.length)).toString();
+    averageRow.insertCell(2).innerHTML = Math.floor((atkTotal / team.length)).toString();
+    averageRow.insertCell(3).innerHTML = Math.floor((defTotal / team.length)).toString();
+    averageRow.insertCell(4).innerHTML = Math.floor((spaTotal / team.length)).toString();
+    averageRow.insertCell(5).innerHTML = Math.floor((spdTotal / team.length)).toString();
+    averageRow.insertCell(6).innerHTML = Math.floor((speTotal / team.length)).toString();
+    averageRow.insertCell(7).innerHTML = Math.floor((bstTotal / team.length)).toString();
 
     index++;
 
