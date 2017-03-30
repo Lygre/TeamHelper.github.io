@@ -460,9 +460,15 @@ function populateWeaknessTable() {
         row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Rock);
         row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Steel);
         row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Water);
-
-
     }
+
+    var total = matchupTableBody.insertRow();
+    total.insertCell().innerHTML = "Total:";
+    for (var weakIndex in teamWeaknesses) {
+        var weakness = teamWeaknesses[weakIndex];
+        total.insertCell().innerHTML = getLabel(weakness);
+    }
+
 }
 
 function populateOverview() {
