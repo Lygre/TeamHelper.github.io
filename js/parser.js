@@ -141,15 +141,16 @@ function parseInput() {
     resetTypeCoverageTable();
     team = [];
 
-    var mons = input.split("\n\n");
+    var mons = [];
+    if(input.indexOf("\n\n") > 0) {
+        mons = input.split("\n\n");
+    } else {
+        mons = input.split("\n");
+    }
     for (var i = 0; i < mons.length; i++) {
         if (mons[i].length > 2) {
             team[i] = parsePokemon(mons[i]);
         }
-    }
-    if (team.length > 6) {
-        alert("Too many pokemon");
-        return;
     }
     for (var j = 0; j < team.length; j++) {
         if (j === 0) {
@@ -158,57 +159,67 @@ function parseInput() {
             setWeaknesses(team[j].weaknesses, false);
         }
     }
-    populateWeaknessTable();
-    populateTypeCoverageTable();
     populateOverview();
     populateStatTable();
+    populateWeaknessTable();
+    populateTypeCoverageTable();
 }
 
 function parsePokemon(raw) {
     var lines = raw.split("\n");
+    if (lines.length < 2) {
+        lines[0] = raw;
+    }
     var offset = 0;
 
     var name = lines[0];
     if (name.indexOf("(") > -1) {
         name = name.substring(name.indexOf("(") + 1, name.indexOf(")")).toLowerCase().replaceAll("-", "");
     } else {
-        name = lines[0].substring(0, lines[0].indexOf(" ")).toLowerCase().replaceAll("-", "");
+        if (name.indexOf(" ") > -1) {
+            name = lines[0].substring(0, lines[0].indexOf(" ")).toLowerCase().replaceAll("-", "");
+        } else {
+            name = lines[0].toLowerCase().replaceAll("-", "");
+        }
     }
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
-    var item = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
-    var ability = lines[1].substring(lines[1].indexOf(" ") + 1, lines[1].length);
 
-    var level = 0;
-    if (lines[2].indexOf("/") < 0) {
-        level = lines[2].substring(lines[2].indexOf(" ") + 1);
-        offset++;
-    } else {
-        level = 100;
+    if (lines.length > 1) {
+        var item = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
+        var ability = lines[1].substring(lines[1].indexOf(" ") + 1, lines[1].length);
+
+        var level = 0;
+        if (lines[2].indexOf("/") < 0) {
+            level = lines[2].substring(lines[2].indexOf(" ") + 1);
+            offset++;
+        } else {
+            level = 100;
+        }
+
+        var evs = parseEVs(lines[2 + offset].substring(lines[2 + offset].indexOf(" ") + 1).split(" / "));
+        var nature = lines[3 + offset].substring(0, lines[3 + offset].indexOf(" "));
+
+        var ivs;
+        if (lines[4 + offset].indexOf("-") < 0) {
+            ivs = parseIVs(lines[4 + offset].substring(lines[4 + offset].indexOf(" ") + 1).split(" / "));
+            offset++;
+        } else {
+            ivs = {
+                hp: 31,
+                atk: 31,
+                def: 31,
+                spa: 31,
+                spd: 31,
+                spe: 31
+            };
+        }
+
+        var move1 = lines[4 + offset].substring(lines[4 + offset].indexOf("-") + 1, lines[4 + offset].length);
+        var move2 = lines[5 + offset].substring(lines[5 + offset].indexOf("-") + 1, lines[5 + offset].length);
+        var move3 = lines[6 + offset].substring(lines[6 + offset].indexOf("-") + 1, lines[6 + offset].length);
+        var move4 = lines[7 + offset].substring(lines[7 + offset].indexOf("-") + 1, lines[7 + offset].length);
     }
-
-    var evs = parseEVs(lines[2 + offset].substring(lines[2 + offset].indexOf(" ") + 1).split(" / "));
-    var nature = lines[3 + offset].substring(0, lines[3 + offset].indexOf(" "));
-
-    var ivs;
-    if (lines[4 + offset].indexOf("-") < 0) {
-        ivs = parseIVs(lines[4 + offset].substring(lines[4 + offset].indexOf(" ") + 1).split(" / "));
-        offset++;
-    } else {
-        ivs = {
-            hp: 31,
-            atk: 31,
-            def: 31,
-            spa: 31,
-            spd: 31,
-            spe: 31
-        };
-    }
-
-    var move1 = lines[4 + offset].substring(lines[4 + offset].indexOf("-") + 1, lines[4 + offset].length);
-    var move2 = lines[5 + offset].substring(lines[5 + offset].indexOf("-") + 1, lines[5 + offset].length);
-    var move3 = lines[6 + offset].substring(lines[6 + offset].indexOf("-") + 1, lines[6 + offset].length);
-    var move4 = lines[7 + offset].substring(lines[7 + offset].indexOf("-") + 1, lines[7 + offset].length);
 
     return {
         name: name,
@@ -683,25 +694,33 @@ function populateTypeCoverageTable() {
     };
     for (var pokemon in team) {
         if (team.hasOwnProperty(pokemon)) {
-            var move1Name = team[pokemon].move1.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
-            var move1 = movedex[move1Name];
-            if (move1.basePower !== 0) {
-                hasMoveType[move1.type] = true;
+            if (team[pokemon].move1 !== undefined) {
+                var move1Name = team[pokemon].move1.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+                var move1 = movedex[move1Name];
+                if (move1.basePower !== 0) {
+                    hasMoveType[move1.type] = true;
+                }
             }
-            var move2Name = team[pokemon].move2.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
-            var move2 = movedex[move2Name];
-            if (move2.basePower !== 0) {
-                hasMoveType[move2.type] = true;
+            if (team[pokemon].move2 !== undefined) {
+                var move2Name = team[pokemon].move2.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+                var move2 = movedex[move2Name];
+                if (move2.basePower !== 0) {
+                    hasMoveType[move2.type] = true;
+                }
             }
-            var move3Name = team[pokemon].move3.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
-            var move3 = movedex[move3Name];
-            if (move3.basePower !== 0) {
-                hasMoveType[move3.type] = true;
+            if (team[pokemon].move3 !== undefined) {
+                var move3Name = team[pokemon].move3.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+                var move3 = movedex[move3Name];
+                if (move3.basePower !== 0) {
+                    hasMoveType[move3.type] = true;
+                }
             }
-            var move4Name = team[pokemon].move4.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
-            var move4 = movedex[move4Name];
-            if (move4.basePower !== 0) {
-                hasMoveType[move4.type] = true;
+            if (team[pokemon].move4 !== undefined) {
+                var move4Name = team[pokemon].move4.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+                var move4 = movedex[move4Name];
+                if (move4.basePower !== 0) {
+                    hasMoveType[move4.type] = true;
+                }
             }
         }
     }
