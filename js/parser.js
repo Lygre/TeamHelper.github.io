@@ -137,12 +137,11 @@ function modifiersChecked() {
 
 function parseInput() {
     var input = document.getElementById("team-input").value;
-    resetWeaknessTable();
     resetTypeCoverageTable();
     team = [];
 
     var mons = [];
-    if(input.indexOf("\n\n") > 0) {
+    if (input.indexOf("\n\n") > 0) {
         mons = input.split("\n\n");
     } else {
         mons = input.split("\n");
@@ -435,35 +434,34 @@ function setWeaknesses(matchups, reset) {
     }
 }
 
-function resetWeaknessTable() {
-    for (var i = 0; i < team.length; i++) {
-        var pos = i + 1;
-        var pokemon = team[i];
-        document.getElementById("mon" + pos + "Label").innerHTML = "";
-        for (var type in pokemon.weaknesses) {
-            if (pokemon.weaknesses.hasOwnProperty(type)) {
-                document.getElementById(type.toLowerCase()).children[pos].innerHTML = "";
-            }
-        }
-    }
-}
-
 function populateWeaknessTable() {
-    for (var i = 0; i < team.length; i++) {
-        var pos = i + 1;
-        var pokemon = team[i];
-        document.getElementById("mon" + pos + "Label").innerHTML = dex[pokemon.name].species;
+    var matchupTableBody = document.getElementById("matchupTableBody");
+    matchupTableBody.innerHTML = "";
+    for (var index in team) {
+        var pokemon = team[index];
 
-        for (var type in pokemon.weaknesses) {
-            if (pokemon.weaknesses.hasOwnProperty(type)) {
-                document.getElementById(type.toLowerCase()).children[pos].innerHTML = getLabel(pokemon.weaknesses[type]);
-            }
-        }
-    }
-    for (var totalType in teamWeaknesses) {
-        if (pokemon.weaknesses.hasOwnProperty(totalType)) {
-            document.getElementById(totalType.toLowerCase()).children[7].innerHTML = getLabel(teamWeaknesses[totalType]);
-        }
+        var row = matchupTableBody.insertRow();
+        row.insertCell().innerHTML = dex[pokemon.name].species;
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Bug);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Dark);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Dragon);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Electric);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Fairy);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Fighting);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Fire);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Flying);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Ghost);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Grass);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Ground);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Ice);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Normal);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Poison);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Psychic);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Rock);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Steel);
+        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Water);
+
+
     }
 }
 
