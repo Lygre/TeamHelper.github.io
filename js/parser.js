@@ -173,13 +173,17 @@ function parsePokemon(raw) {
 
     var name = lines[0];
     if (name.indexOf("(") > -1) {
-        name = name.substring(name.indexOf("(") + 1, name.indexOf(")")).toLowerCase().replaceAll("-", "");
+        name = name.substring(name.indexOf("(") + 1, name.indexOf(")")).toLowerCase();
     } else {
-        if (name.indexOf(" ") > -1) {
-            name = lines[0].substring(0, lines[0].indexOf(" ")).toLowerCase().replaceAll("-", "");
+        if (name.indexOf(" ") > -1 && name.indexOf("@") > 0) {
+            name = lines[0].substring(0, lines[0].indexOf(" ") - 1).toLowerCase();
         } else {
-            name = lines[0].toLowerCase().replaceAll("-", "");
+            name = lines[0].toLowerCase();
         }
+    }
+    name = name.replaceAll(" ", "");
+    if (name.indexOf("m-") > -1) {
+        name = name.substring(2) + "mega";
     }
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
@@ -214,10 +218,10 @@ function parsePokemon(raw) {
             };
         }
 
-        var move1 = lines[4 + offset].substring(lines[4 + offset].indexOf("-") + 1, lines[4 + offset].length);
-        var move2 = lines[5 + offset].substring(lines[5 + offset].indexOf("-") + 1, lines[5 + offset].length);
-        var move3 = lines[6 + offset].substring(lines[6 + offset].indexOf("-") + 1, lines[6 + offset].length);
-        var move4 = lines[7 + offset].substring(lines[7 + offset].indexOf("-") + 1, lines[7 + offset].length);
+        var move1 = lines[4 + offset].substring(lines[4 + offset].indexOf("-") + 1, lines[4 + offset].length).replace("[", "").replace("]", "");
+        var move2 = lines[5 + offset].substring(lines[5 + offset].indexOf("-") + 1, lines[5 + offset].length).replace("[", "").replace("]", "");
+        var move3 = lines[6 + offset].substring(lines[6 + offset].indexOf("-") + 1, lines[6 + offset].length).replace("[", "").replace("]", "");
+        var move4 = lines[7 + offset].substring(lines[7 + offset].indexOf("-") + 1, lines[7 + offset].length).replace("[", "").replace("]", "");
     }
 
     return {
