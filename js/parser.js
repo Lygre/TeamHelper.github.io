@@ -173,13 +173,17 @@ function parsePokemon(raw) {
 
     var name = lines[0];
     if (name.indexOf("(") > -1) {
-        name = name.substring(name.indexOf("(") + 1, name.indexOf(")")).toLowerCase().replaceAll("-", "");
+        name = name.substring(name.indexOf("(") + 1, name.indexOf(")")).toLowerCase();
     } else {
-        if (name.indexOf(" ") > -1) {
-            name = lines[0].substring(0, lines[0].indexOf(" ")).toLowerCase().replaceAll("-", "");
+        if (name.indexOf(" ") > -1 && name.indexOf("@") > 0) {
+            name = lines[0].substring(0, lines[0].indexOf(" ") - 1).toLowerCase();
         } else {
-            name = lines[0].toLowerCase().replaceAll("-", "");
+            name = lines[0].toLowerCase();
         }
+    }
+    name = name.replaceAll(" ", "");
+    if (name.indexOf("m-") > -1) {
+        name = name.substring(2) + "mega";
     }
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
@@ -214,10 +218,10 @@ function parsePokemon(raw) {
             };
         }
 
-        var move1 = lines[4 + offset].substring(lines[4 + offset].indexOf("-") + 1, lines[4 + offset].length);
-        var move2 = lines[5 + offset].substring(lines[5 + offset].indexOf("-") + 1, lines[5 + offset].length);
-        var move3 = lines[6 + offset].substring(lines[6 + offset].indexOf("-") + 1, lines[6 + offset].length);
-        var move4 = lines[7 + offset].substring(lines[7 + offset].indexOf("-") + 1, lines[7 + offset].length);
+        var move1 = lines[4 + offset].substring(lines[4 + offset].indexOf("-") + 1, lines[4 + offset].length).replace("[", "").replace("]", "");
+        var move2 = lines[5 + offset].substring(lines[5 + offset].indexOf("-") + 1, lines[5 + offset].length).replace("[", "").replace("]", "");
+        var move3 = lines[6 + offset].substring(lines[6 + offset].indexOf("-") + 1, lines[6 + offset].length).replace("[", "").replace("]", "");
+        var move4 = lines[7 + offset].substring(lines[7 + offset].indexOf("-") + 1, lines[7 + offset].length).replace("[", "").replace("]", "");
     }
 
     return {
@@ -525,8 +529,6 @@ function populateOverview() {
 }
 
 function populateStatTable() {
-    var evIvMod = document.getElementById("evIvModCheckbox");
-    var baseOnly = document.getElementById("baseOnlyCheckbox");
     var table = document.getElementById("statTableBody");
 
     table.innerHTML = "";
@@ -562,8 +564,8 @@ function populateStatTable() {
         var actualSpe = 0;
 
         row.insertCell(0).innerHTML = fullMon.species;
-        if (!evIvMod.checked) { //Don't apply EV/IV modifiers
-            if (baseOnly.checked) {
+        if(evs === undefined) {
+            if(ivs === undefined) {
                 row.insertCell(1).innerHTML = baseStats.hp;
                 row.insertCell(2).innerHTML = baseStats.atk;
                 row.insertCell(3).innerHTML = baseStats.def;
@@ -578,12 +580,12 @@ function populateStatTable() {
                 spdTotal += baseStats.spd;
                 speTotal += baseStats.spe;
             } else {
-                actualHp = calcStat(basicMon, "hp", 0, 0);
-                actualAtk = calcStat(basicMon, "atk", 0, 0);
-                actualDef = calcStat(basicMon, "def", 0, 0);
-                actualSpa = calcStat(basicMon, "spa", 0, 0);
-                actualSpd = calcStat(basicMon, "spd", 0, 0);
-                actualSpe = calcStat(basicMon, "spe", 0, 0);
+                actualHp = calcStat(basicMon, "hp", 0, ivs.hp);
+                actualAtk = calcStat(basicMon, "atk", 0, ivs.atk);
+                actualDef = calcStat(basicMon, "def", 0, ivs.def);
+                actualSpa = calcStat(basicMon, "spa", 0, ivs.spa);
+                actualSpd = calcStat(basicMon, "spd", 0, ivs.spd);
+                actualSpe = calcStat(basicMon, "spe", 0, ivs.spe);
 
                 row.insertCell(1).innerHTML = actualHp.toString();
                 row.insertCell(2).innerHTML = actualAtk.toString();
@@ -600,26 +602,49 @@ function populateStatTable() {
                 speTotal += actualSpe;
             }
         } else {
-            actualHp = calcStat(basicMon, "hp", evs.hp / 4, ivs.hp);
-            actualAtk = calcStat(basicMon, "atk", evs.atk / 4, ivs.atk);
-            actualDef = calcStat(basicMon, "def", evs.def / 4, ivs.def);
-            actualSpa = calcStat(basicMon, "spa", evs.spa / 4, ivs.spa);
-            actualSpd = calcStat(basicMon, "spd", evs.spd / 4, ivs.spd);
-            actualSpe = calcStat(basicMon, "spe", evs.spe / 4, ivs.spe);
+            if(ivs === undefined) {
+                actualHp = calcStat(basicMon, "hp", evs.hp, 0);
+                actualAtk = calcStat(basicMon, "atk", evs.atk, 0);
+                actualDef = calcStat(basicMon, "def", evs.def, 0);
+                actualSpa = calcStat(basicMon, "spa", evs.spa, 0);
+                actualSpd = calcStat(basicMon, "spd", evs.spd, 0);
+                actualSpe = calcStat(basicMon, "spe", evs.spe, 0);
 
-            row.insertCell(1).innerHTML = actualHp.toString();
-            row.insertCell(2).innerHTML = actualAtk.toString();
-            row.insertCell(3).innerHTML = actualDef.toString();
-            row.insertCell(4).innerHTML = actualSpa.toString();
-            row.insertCell(5).innerHTML = actualSpd.toString();
-            row.insertCell(6).innerHTML = actualSpe.toString();
+                row.insertCell(1).innerHTML = actualHp.toString();
+                row.insertCell(2).innerHTML = actualAtk.toString();
+                row.insertCell(3).innerHTML = actualDef.toString();
+                row.insertCell(4).innerHTML = actualSpa.toString();
+                row.insertCell(5).innerHTML = actualSpd.toString();
+                row.insertCell(6).innerHTML = actualSpe.toString();
 
-            hpTotal += actualHp;
-            atkTotal += actualAtk;
-            defTotal += actualDef;
-            spaTotal += actualSpa;
-            spdTotal += actualSpd;
-            speTotal += actualSpe;
+                hpTotal += actualHp;
+                atkTotal += actualAtk;
+                defTotal += actualDef;
+                spaTotal += actualSpa;
+                spdTotal += actualSpd;
+                speTotal += actualSpe;
+            } else {
+                actualHp = calcStat(basicMon, "hp", evs.hp, ivs.hp);
+                actualAtk = calcStat(basicMon, "atk", evs.atk, ivs.atk);
+                actualDef = calcStat(basicMon, "def", evs.def, ivs.def);
+                actualSpa = calcStat(basicMon, "spa", evs.spa, ivs.spa);
+                actualSpd = calcStat(basicMon, "spd", evs.spa, ivs.spa);
+                actualSpe = calcStat(basicMon, "spe", evs.spe, ivs.spe);
+
+                row.insertCell(1).innerHTML = actualHp.toString();
+                row.insertCell(2).innerHTML = actualAtk.toString();
+                row.insertCell(3).innerHTML = actualDef.toString();
+                row.insertCell(4).innerHTML = actualSpa.toString();
+                row.insertCell(5).innerHTML = actualSpd.toString();
+                row.insertCell(6).innerHTML = actualSpe.toString();
+
+                hpTotal += actualHp;
+                atkTotal += actualAtk;
+                defTotal += actualDef;
+                spaTotal += actualSpa;
+                spdTotal += actualSpd;
+                speTotal += actualSpe;
+            }
         }
 
         var bst = 0;
