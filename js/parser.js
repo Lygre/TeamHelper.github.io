@@ -178,22 +178,22 @@ function parsePokemon(raw) {
     }
     name = name.replaceAll(" ", "").replaceAll("%", "").replaceAll(":", "");
     if (name.indexOf("m-") === 0) {
-        if(name.indexOf("charizard") > -1) {
-            var zardVariant = name.substring(name.length-1, name.length);
-            name = name.substring(0, name.length-1);
+        if (name.indexOf("charizard") > -1) {
+            var zardVariant = name.substring(name.length - 1, name.length);
+            name = name.substring(0, name.length - 1);
         }
         name = name.substring(2) + "mega";
-        if(zardVariant !== undefined) name += zardVariant;
+        if (zardVariant !== undefined) name += zardVariant;
     } else if (name.indexOf("-mega") > -1) {
-        if(name.indexOf("charizard") > -1) {
-            zardVariant = name.substring(name.length-1, name.length);
-            name = name.substring(0, name.length-1);
+        if (name.indexOf("charizard") > -1) {
+            zardVariant = name.substring(name.length - 1, name.length);
+            name = name.substring(0, name.length - 1);
         }
         name = name.substring(0, name.indexOf("-mega")) + "mega";
-        if(zardVariant !== undefined) name += zardVariant;
+        if (zardVariant !== undefined) name += zardVariant;
     }
     if (name.indexOf("-a") > -1) {
-        if(name.indexOf("greninja") < 0) name += "lola";
+        if (name.indexOf("greninja") < 0) name += "lola";
         else name += "sh";
     }
     if (name.indexOf("rotom-") > -1 && name.length === 7) {
@@ -229,16 +229,16 @@ function parsePokemon(raw) {
                 break;
         }
     }
-    else if(name === "thundurus-t") name = "thundurustherian";
-    else if(name === "thundurus-i") name = "thundurus";
-    else if(name === "tornadus-t") name = "tornadustherian";
-    else if(name === "tornadus-i") name = "tornadus";
-    else if(name === "landorus-t") name = "landorustherian";
-    else if(name === "landorus-i") name = "landorus";
-    else if(name === "kyurem-b") name = "kyuremblack";
-    else if(name === "kyurem-w") name = "kyuremwhite";
-    else if(name === "zygarde50") name = "zygarde";
-    else if(name === "hoopa-u") name = "hoopaunbound";
+    else if (name === "thundurus-t") name = "thundurustherian";
+    else if (name === "thundurus-i") name = "thundurus";
+    else if (name === "tornadus-t") name = "tornadustherian";
+    else if (name === "tornadus-i") name = "tornadus";
+    else if (name === "landorus-t") name = "landorustherian";
+    else if (name === "landorus-i") name = "landorus";
+    else if (name === "kyurem-b") name = "kyuremblack";
+    else if (name === "kyurem-w") name = "kyuremwhite";
+    else if (name === "zygarde50") name = "zygarde";
+    else if (name === "hoopa-u") name = "hoopaunbound";
     name = name.replaceAll("-", "");
     console.log(name);
     var types = dex[name].types;
