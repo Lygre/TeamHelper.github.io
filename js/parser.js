@@ -186,8 +186,8 @@ function parsePokemon(raw) {
         name += "lola";
     }
     if (name.indexOf("rotom-") > -1 && name.length === 7) {
-        var variant = name.substring(name.indexOf("-") + 1);
-        switch (variant) {
+        var rotomVariant = name.substring(name.indexOf("-") + 1);
+        switch (rotomVariant) {
             case "h":
                 name = "rotomheat";
                 break;
@@ -204,8 +204,22 @@ function parsePokemon(raw) {
                 name = "rotommow";
                 break;
         }
+    } else if (name.indexOf("deoxys-") > -1 && name.length === 8) {
+        var deoxysVariant = name.substring(name.indexOf("-") + 1);
+        switch (deoxysVariant) {
+            case "a":
+                name = "deoxysattack";
+                break;
+            case "d":
+                name = "deoxysdefense";
+                break;
+            case "s":
+                name = "deoxysspeed";
+                break;
+        }
     }
     name = name.replaceAll("-", "");
+    console.log(name);
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
 
