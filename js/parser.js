@@ -177,21 +177,25 @@ function parsePokemon(raw) {
         name = name.toLowerCase();
     }
     name = name.replaceAll(" ", "");
+    name = name.replaceAll(":", "");
     if (name.indexOf("m-") === 0) {
         if(name.indexOf("charizard") > -1) {
             var zardVariant = name.substring(name.length-1, name.length);
             name = name.substring(0, name.length-1);
         }
-        name = name.substring(2) + "mega" + zardVariant;
+        name = name.substring(2) + "mega";
+        if(zardVariant !== undefined) name += zardVariant;
     } else if (name.indexOf("-mega") > -1) {
         if(name.indexOf("charizard") > -1) {
             zardVariant = name.substring(name.length-1, name.length);
             name = name.substring(0, name.length-1);
         }
-        name = name.substring(0, name.indexOf("-mega")) + "mega" + zardVariant;
+        name = name.substring(0, name.indexOf("-mega")) + "mega";
+        if(zardVariant !== undefined) name += zardVariant;
     }
     if (name.indexOf("-a") > -1) {
-        name += "lola";
+        if(name.indexOf("greninja") < 0) name += "lola";
+        else name += "sh";
     }
     if (name.indexOf("rotom-") > -1 && name.length === 7) {
         var rotomVariant = name.substring(name.indexOf("-") + 1);
@@ -225,7 +229,9 @@ function parsePokemon(raw) {
                 name = "deoxysspeed";
                 break;
         }
-    }
+    } else if(name === "thundurus-t") name = "thundurustherian";
+    else if(name === "tornadus-t") name = "tornadustherian";
+    else if(name === "landorus-t") name = "landorustherian";
     name = name.replaceAll("-", "");
     console.log(name);
     var types = dex[name].types;
