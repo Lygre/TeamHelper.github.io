@@ -178,9 +178,17 @@ function parsePokemon(raw) {
     }
     name = name.replaceAll(" ", "");
     if (name.indexOf("m-") === 0) {
-        name = name.substring(2) + "mega";
+        if(name.indexOf("charizard") > -1) {
+            var zardVariant = name.substring(name.length-1, name.length);
+            name = name.substring(0, name.length-1);
+        }
+        name = name.substring(2) + "mega" + zardVariant;
     } else if (name.indexOf("-mega") > -1) {
-        name = name.substring(0, name.indexOf("-mega")) + "mega";
+        if(name.indexOf("charizard") > -1) {
+            zardVariant = name.substring(name.length-1, name.length);
+            name = name.substring(0, name.length-1);
+        }
+        name = name.substring(0, name.indexOf("-mega")) + "mega" + zardVariant;
     }
     if (name.indexOf("-a") > -1) {
         name += "lola";
