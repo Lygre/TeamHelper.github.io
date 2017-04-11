@@ -176,8 +176,7 @@ function parsePokemon(raw) {
         }
         name = name.toLowerCase();
     }
-    name = name.replaceAll(" ", "");
-    name = name.replaceAll(":", "");
+    name = name.replaceAll(" ", "").replaceAll("%", "").replaceAll(":", "");
     if (name.indexOf("m-") === 0) {
         if(name.indexOf("charizard") > -1) {
             var zardVariant = name.substring(name.length-1, name.length);
@@ -229,9 +228,17 @@ function parsePokemon(raw) {
                 name = "deoxysspeed";
                 break;
         }
-    } else if(name === "thundurus-t") name = "thundurustherian";
+    }
+    else if(name === "thundurus-t") name = "thundurustherian";
+    else if(name === "thundurus-i") name = "thundurus";
     else if(name === "tornadus-t") name = "tornadustherian";
+    else if(name === "tornadus-i") name = "tornadus";
     else if(name === "landorus-t") name = "landorustherian";
+    else if(name === "landorus-i") name = "landorus";
+    else if(name === "kyurem-b") name = "kyuremblack";
+    else if(name === "kyurem-w") name = "kyuremwhite";
+    else if(name === "zygarde50") name = "zygarde";
+    else if(name === "hoopa-u") name = "hoopaunbound";
     name = name.replaceAll("-", "");
     console.log(name);
     var types = dex[name].types;
