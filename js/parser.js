@@ -130,11 +130,6 @@ var weak = 1;
 var resist = 2;
 var immune = 3;
 
-function modifiersChecked() {
-    var checkbox = document.getElementById("baseOnlyCheckbox");
-    checkbox.checked = !checkbox.checked;
-}
-
 function parseInput() {
     var input = document.getElementById("team-input").value;
     resetTypeCoverageTable();
@@ -175,21 +170,23 @@ function parsePokemon(raw) {
     if (name.indexOf("(") > -1) {
         name = name.substring(name.indexOf("(") + 1, name.indexOf(")")).toLowerCase();
     } else {
-        if (name.indexOf(" ") > -1 && name.indexOf("@") > 0) {
-            name = lines[0].substring(0, lines[0].indexOf(" ") - 1).toLowerCase();
-        } else {
-            name = lines[0].toLowerCase();
+        if(name.indexOf("@") > -1) {
+            name = name.substring(0, name.indexOf(" @"));
+            var item = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
         }
+        name = name.toLowerCase();
     }
     name = name.replaceAll(" ", "");
     if (name.indexOf("m-") > -1) {
         name = name.substring(2) + "mega";
+    } else if(name.indexOf("-mega") > -1) {
+        name = name.substring(0, name.indexOf("-mega")) + "mega";
     }
+    name = name.replaceAll("-", "");
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
 
     if (lines.length > 1) {
-        var item = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
         var ability = lines[1].substring(lines[1].indexOf(" ") + 1, lines[1].length);
 
         var level = 0;
@@ -773,13 +770,13 @@ function setTypeCoverage(type) {
 
 function getLabel(number) {
     if (number === 0) {
-        return "Immune"
+        return "I"
     } else if (number === 1) {
-        return "Neutral"
+        return "N"
     } else if (number > 0) {
-        return number + "x Weak"
+        return number + "xW"
     } else if (number < 0) {
-        return -number + "x Resist"
+        return -number + "xR"
     }
 }
 
