@@ -170,19 +170,77 @@ function parsePokemon(raw) {
     if (name.indexOf("(") > -1) {
         name = name.substring(name.indexOf("(") + 1, name.indexOf(")")).toLowerCase();
     } else {
-        if(name.indexOf("@") > -1) {
+        if (name.indexOf("@") > -1) {
             name = name.substring(0, name.indexOf(" @"));
             var item = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
         }
         name = name.toLowerCase();
     }
-    name = name.replaceAll(" ", "");
-    if (name.indexOf("m-") > -1) {
+    name = name.replaceAll(" ", "").replaceAll("%", "").replaceAll(":", "");
+    if (name.indexOf("m-") === 0) {
+        if(name.indexOf("charizard") > -1) {
+            var zardVariant = name.substring(name.length-1, name.length);
+            name = name.substring(0, name.length-1);
+        }
         name = name.substring(2) + "mega";
-    } else if(name.indexOf("-mega") > -1) {
+        if(zardVariant !== undefined) name += zardVariant;
+    } else if (name.indexOf("-mega") > -1) {
+        if(name.indexOf("charizard") > -1) {
+            zardVariant = name.substring(name.length-1, name.length);
+            name = name.substring(0, name.length-1);
+        }
         name = name.substring(0, name.indexOf("-mega")) + "mega";
+        if(zardVariant !== undefined) name += zardVariant;
     }
+    if (name.indexOf("-a") > -1) {
+        if(name.indexOf("greninja") < 0) name += "lola";
+        else name += "sh";
+    }
+    if (name.indexOf("rotom-") > -1 && name.length === 7) {
+        var rotomVariant = name.substring(name.indexOf("-") + 1);
+        switch (rotomVariant) {
+            case "h":
+                name = "rotomheat";
+                break;
+            case "w":
+                name = "rotomwash";
+                break;
+            case "f":
+                name = "rotomfrost";
+                break;
+            case "s":
+                name = "rotomfan";
+                break;
+            case "c":
+                name = "rotommow";
+                break;
+        }
+    } else if (name.indexOf("deoxys-") > -1 && name.length === 8) {
+        var deoxysVariant = name.substring(name.indexOf("-") + 1);
+        switch (deoxysVariant) {
+            case "a":
+                name = "deoxysattack";
+                break;
+            case "d":
+                name = "deoxysdefense";
+                break;
+            case "s":
+                name = "deoxysspeed";
+                break;
+        }
+    }
+    else if(name === "thundurus-t") name = "thundurustherian";
+    else if(name === "thundurus-i") name = "thundurus";
+    else if(name === "tornadus-t") name = "tornadustherian";
+    else if(name === "tornadus-i") name = "tornadus";
+    else if(name === "landorus-t") name = "landorustherian";
+    else if(name === "landorus-i") name = "landorus";
+    else if(name === "kyurem-b") name = "kyuremblack";
+    else if(name === "kyurem-w") name = "kyuremwhite";
+    else if(name === "zygarde50") name = "zygarde";
+    else if(name === "hoopa-u") name = "hoopaunbound";
     name = name.replaceAll("-", "");
+    console.log(name);
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
 
@@ -561,8 +619,8 @@ function populateStatTable() {
         var actualSpe = 0;
 
         row.insertCell(0).innerHTML = fullMon.species;
-        if(evs === undefined) {
-            if(ivs === undefined) {
+        if (evs === undefined) {
+            if (ivs === undefined) {
                 row.insertCell(1).innerHTML = baseStats.hp;
                 row.insertCell(2).innerHTML = baseStats.atk;
                 row.insertCell(3).innerHTML = baseStats.def;
@@ -599,7 +657,7 @@ function populateStatTable() {
                 speTotal += actualSpe;
             }
         } else {
-            if(ivs === undefined) {
+            if (ivs === undefined) {
                 actualHp = calcStat(basicMon, "hp", evs.hp, 0);
                 actualAtk = calcStat(basicMon, "atk", evs.atk, 0);
                 actualDef = calcStat(basicMon, "def", evs.def, 0);
