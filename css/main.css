@@ -19,6 +19,10 @@ span {
     font-family: inherit;
 }
 
+td {
+    border:1px solid gray;
+}
+
 .count {
     font-weight: bold;
 }

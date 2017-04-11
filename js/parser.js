@@ -130,11 +130,6 @@ var weak = 1;
 var resist = 2;
 var immune = 3;
 
-function modifiersChecked() {
-    var checkbox = document.getElementById("baseOnlyCheckbox");
-    checkbox.checked = !checkbox.checked;
-}
-
 function parseInput() {
     var input = document.getElementById("team-input").value;
     resetTypeCoverageTable();
@@ -773,13 +768,13 @@ function setTypeCoverage(type) {
 
 function getLabel(number) {
     if (number === 0) {
-        return "Immune"
+        return "I"
     } else if (number === 1) {
-        return "Neutral"
+        return "N"
     } else if (number > 0) {
-        return number + "x Weak"
+        return number + "xW"
     } else if (number < 0) {
-        return -number + "x Resist"
+        return -number + "xR"
     }
 }
 
