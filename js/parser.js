@@ -170,23 +170,42 @@ function parsePokemon(raw) {
     if (name.indexOf("(") > -1) {
         name = name.substring(name.indexOf("(") + 1, name.indexOf(")")).toLowerCase();
     } else {
-        if(name.indexOf("@") > -1) {
+        if (name.indexOf("@") > -1) {
             name = name.substring(0, name.indexOf(" @"));
             var item = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
         }
         name = name.toLowerCase();
     }
     name = name.replaceAll(" ", "");
-    if (name.indexOf("m-") > -1) {
+    if (name.indexOf("m-") === 0) {
         name = name.substring(2) + "mega";
-    } else if(name.indexOf("-mega") > -1) {
+    } else if (name.indexOf("-mega") > -1) {
         name = name.substring(0, name.indexOf("-mega")) + "mega";
     }
-    if(name.indexOf("-a") > -1) {
+    if (name.indexOf("-a") > -1) {
         name += "lola";
     }
+    if (name.indexOf("rotom-") > -1 && name.length === 7) {
+        var variant = name.substring(name.indexOf("-") + 1);
+        switch (variant) {
+            case "h":
+                name = "rotomheat";
+                break;
+            case "w":
+                name = "rotomwash";
+                break;
+            case "f":
+                name = "rotomfrost";
+                break;
+            case "s":
+                name = "rotomfan";
+                break;
+            case "c":
+                name = "rotommow";
+                break;
+        }
+    }
     name = name.replaceAll("-", "");
-    console.log(name);
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
 
@@ -565,8 +584,8 @@ function populateStatTable() {
         var actualSpe = 0;
 
         row.insertCell(0).innerHTML = fullMon.species;
-        if(evs === undefined) {
-            if(ivs === undefined) {
+        if (evs === undefined) {
+            if (ivs === undefined) {
                 row.insertCell(1).innerHTML = baseStats.hp;
                 row.insertCell(2).innerHTML = baseStats.atk;
                 row.insertCell(3).innerHTML = baseStats.def;
@@ -603,7 +622,7 @@ function populateStatTable() {
                 speTotal += actualSpe;
             }
         } else {
-            if(ivs === undefined) {
+            if (ivs === undefined) {
                 actualHp = calcStat(basicMon, "hp", evs.hp, 0);
                 actualAtk = calcStat(basicMon, "atk", evs.atk, 0);
                 actualDef = calcStat(basicMon, "def", evs.def, 0);
