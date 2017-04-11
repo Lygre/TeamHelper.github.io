@@ -182,7 +182,11 @@ function parsePokemon(raw) {
     } else if(name.indexOf("-mega") > -1) {
         name = name.substring(0, name.indexOf("-mega")) + "mega";
     }
+    if(name.indexOf("-a") > -1) {
+        name += "lola";
+    }
     name = name.replaceAll("-", "");
+    console.log(name);
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
 
