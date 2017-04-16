@@ -136,7 +136,6 @@ function parseInput() {
     team = [];
 
     var mons = [];
-    console.log(JSON.stringify(input));
     if (input.indexOf("\n\n") > 0) {
         mons = input.split("\n\n");
     } else {
@@ -241,7 +240,6 @@ function parsePokemon(raw) {
     else if (name === "zygarde50") name = "zygarde";
     else if (name === "hoopa-u") name = "hoopaunbound";
     name = name.replaceAll("-", "");
-    console.log(name);
 
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
