@@ -180,83 +180,12 @@ function parsePokemon(raw) {
     }
     var offset = 0;
 
-    var name = lines[0];
-    if (name.indexOf("(") > -1) {
-        name = name.substring(name.indexOf("(") + 1, name.indexOf(")")).toLowerCase();
-    } else {
-        if (name.indexOf("@") > -1) {
-            name = name.substring(0, name.indexOf(" @"));
-            var item = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
-        }
-        name = name.toLowerCase();
-    }
-    name = name.replaceAll(" ", "").replaceAll("%", "").replaceAll(":", "");
-    if (name.indexOf("m-") === 0) {
-        if (name.indexOf("charizard") > -1) {
-            var zardVariant = name.substring(name.length - 1, name.length);
-            name = name.substring(0, name.length - 1);
-        }
-        name = name.substring(2) + "mega";
-        if (zardVariant !== undefined) name += zardVariant;
-    } else if (name.indexOf("-mega") > -1) {
-        if (name.indexOf("charizard") > -1) {
-            zardVariant = name.substring(name.length - 1, name.length);
-            name = name.substring(0, name.length - 1);
-        }
-        name = name.substring(0, name.indexOf("-mega")) + "mega";
-        if (zardVariant !== undefined) name += zardVariant;
-    }
-    if (name.indexOf("-a") > -1) {
-        if (name.indexOf("greninja") < 0) name += "lola";
-        else name += "sh";
-    }
-    if (name.indexOf("rotom-") > -1 && name.length === 7) {
-        var rotomVariant = name.substring(name.indexOf("-") + 1);
-        switch (rotomVariant) {
-            case "h":
-                name = "rotomheat";
-                break;
-            case "w":
-                name = "rotomwash";
-                break;
-            case "f":
-                name = "rotomfrost";
-                break;
-            case "s":
-                name = "rotomfan";
-                break;
-            case "c":
-                name = "rotommow";
-                break;
-        }
-    } else if (name.indexOf("deoxys-") > -1 && name.length === 8) {
-        var deoxysVariant = name.substring(name.indexOf("-") + 1);
-        switch (deoxysVariant) {
-            case "a":
-                name = "deoxysattack";
-                break;
-            case "d":
-                name = "deoxysdefense";
-                break;
-            case "s":
-                name = "deoxysspeed";
-                break;
-        }
-    }
-    else if (name === "thundurus-t") name = "thundurustherian";
-    else if (name === "thundurus-i") name = "thundurus";
-    else if (name === "tornadus-t") name = "tornadustherian";
-    else if (name === "tornadus-i") name = "tornadus";
-    else if (name === "landorus-t") name = "landorustherian";
-    else if (name === "landorus-i") name = "landorus";
-    else if (name === "kyurem-b") name = "kyuremblack";
-    else if (name === "kyurem-w") name = "kyuremwhite";
-    else if (name === "zygarde50") name = "zygarde";
-    else if (name === "hoopa-u") name = "hoopaunbound";
-    name = name.replaceAll("-", "");
-
+    var name = parsePokemonName(lines[0]);
     if (dex[name] === undefined) {
         return;
+    }
+    if (name.indexOf("@") > -1) {
+        var item = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
     }
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
@@ -335,7 +264,7 @@ function parsePokemon(raw) {
             level: 100,
             types: types,
             weaknesses: weaknesses,
-            item: item,
+            item: undefined,
             ability: undefined,
             nature: "serious",
             evs: evs,
@@ -346,6 +275,93 @@ function parsePokemon(raw) {
             move4: undefined
         }
     }
+}
+
+function parsePokemonName(name) {
+    if (name.indexOf("(") > -1) {
+        name = name.substring(name.indexOf("(") + 1, name.indexOf(")")).toLowerCase();
+    } else {
+        if (name.indexOf("@") > -1) {
+            name = name.substring(0, name.indexOf(" @"));
+        }
+        name = name.toLowerCase();
+    }
+    name = name.replaceAll(" ", "").replaceAll("%", "").replaceAll(":", "");
+    if (name.indexOf("m-") === 0) {
+        if (name.indexOf("charizard") > -1) {
+            var zardVariant = name.substring(name.length - 1, name.length);
+            name = name.substring(0, name.length - 1);
+        }
+        if (name.indexOf("mewtwo") > -1) {
+            var mewtwoVariant = name.substring(name.length - 1, name.length);
+            name = name.substring(0, name.length - 1);
+        }
+        name = name.substring(2) + "mega";
+        if (zardVariant !== undefined) name += zardVariant;
+        else if (mewtwoVariant !== undefined) name += mewtwoVariant;
+    } else if (name.indexOf("-mega") > -1) {
+        if (name.indexOf("charizard") > -1) {
+            zardVariant = name.substring(name.length - 1, name.length);
+            name = name.substring(0, name.length - 1);
+        } else if (name.indexOf("mewtwo") > -1) {
+            mewtwoVariant = name.substring(name.length - 1, name.length);
+            name = name.substring(0, name.length - 1);
+        }
+        name = name.substring(0, name.indexOf("-mega")) + "mega";
+        if (zardVariant !== undefined) name += zardVariant;
+        else if (mewtwoVariant !== undefined) name += mewtwoVariant;
+    }
+    if (name.indexOf("-a") > -1) {
+        if (name.indexOf("alola") < 0 && name.indexOf("ash") < 0 && name.indexOf("deoxys") < 0) name += "lola";
+        else if (name.indexOf("ash") < 0 && name.indexOf("alola") < 0 && name.indexOf("deoxys") < 0) name += "sh";
+    }
+    if (name.indexOf("rotom-") > -1 && name.length === 7) {
+        var rotomVariant = name.substring(name.indexOf("-") + 1);
+        switch (rotomVariant) {
+            case "h":
+                name = "rotomheat";
+                break;
+            case "w":
+                name = "rotomwash";
+                break;
+            case "f":
+                name = "rotomfrost";
+                break;
+            case "s":
+                name = "rotomfan";
+                break;
+            case "c":
+                name = "rotommow";
+                break;
+        }
+    } else if (name.indexOf("deoxys-") > -1 && name.length === 8) {
+        var deoxysVariant = name.substring(name.indexOf("-") + 1);
+        switch (deoxysVariant) {
+            case "a":
+                name = "deoxysattack";
+                break;
+            case "d":
+                name = "deoxysdefense";
+                break;
+            case "s":
+                name = "deoxysspeed";
+                break;
+        }
+    }
+    else if (name === "thundurus-t") name = "thundurustherian";
+    else if (name === "thundurus-i") name = "thundurus";
+    else if (name === "tornadus-t") name = "tornadustherian";
+    else if (name === "tornadus-i") name = "tornadus";
+    else if (name === "landorus-t") name = "landorustherian";
+    else if (name === "landorus-i") name = "landorus";
+    else if (name === "kyurem-b") name = "kyuremblack";
+    else if (name === "kyurem-w") name = "kyuremwhite";
+    else if (name === "zygarde50") name = "zygarde";
+    else if (name === "hoopa-u") name = "hoopaunbound";
+    name = name.replaceAll("-", "");
+    name = name.replaceAll(".", "");
+    name = name.replaceAll("'", "");
+    return name;
 }
 
 function parseEVs(rawEVs) {
@@ -703,12 +719,12 @@ function populateStatTable() {
             var baseStats = fullMon.baseStats;
 
             var ivTotal = 0;
-            for(var iv in ivs) {
+            for (var iv in ivs) {
                 ivTotal += ivs[iv];
             }
 
             var evTotal = 0;
-            for(var ev in evs) {
+            for (var ev in evs) {
                 evTotal += evs[ev];
             }
 
@@ -798,8 +814,6 @@ function populateStatTable() {
         totalRow.insertCell(5).innerHTML = (spdTotal).toString();
         totalRow.insertCell(6).innerHTML = (speTotal).toString();
         totalRow.insertCell(7).innerHTML = (bstTotal).toString();
-    } else {
-
     }
 }
 
