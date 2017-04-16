@@ -240,7 +240,6 @@ function parsePokemon(raw) {
     else if (name === "zygarde50") name = "zygarde";
     else if (name === "hoopa-u") name = "hoopaunbound";
     name = name.replaceAll("-", "");
-    console.log(name);
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
 
@@ -527,7 +526,32 @@ function populateWeaknessTable() {
         var weakness = teamWeaknesses[weakIndex];
         total.insertCell().innerHTML = getLabel(weakness);
     }
+    colorCodeWeaknessTable();
+}
 
+function colorCodeWeaknessTable() {
+    var weaknessTableRows = document.getElementById("matchupTableBody").children;
+    for (var i = 0; i < weaknessTableRows.length; i++) {
+        var currentRow = weaknessTableRows[i].children;
+        for (var j = 1; j < currentRow.length; j++) {
+            var cell = currentRow[j];
+            var num = parseFloat(cell.innerHTML);
+            if (!isNaN(num)) {
+                if (num > 1 && num < 4) {
+                    cell.style.backgroundColor = "#ffcccc";
+                } else if (num >= 4) {
+                    cell.style.backgroundColor = "#ff4d4d";
+                } else if (num < 1 && num > .25) {
+                    cell.style.backgroundColor = "#ccffcc"
+                } else if (num <= .25) {
+                    cell.style.backgroundColor = "#4dff4d"
+                }
+            } else {
+                cell.style.backgroundColor = "#616161";
+                cell.style.color = "#ffffff";
+            }
+        }
+    }
 }
 
 function populateOverview() {
@@ -584,6 +608,7 @@ function populateOverview() {
 }
 
 function populateStatTable() {
+    var baseOnly = document.getElementById("evIvSwitch").checked;
     var table = document.getElementById("statTableBody");
 
     table.innerHTML = "";
@@ -619,7 +644,21 @@ function populateStatTable() {
         var actualSpe = 0;
 
         row.insertCell(0).innerHTML = fullMon.species;
-        if (evs === undefined) {
+        if (baseOnly) {
+            row.insertCell(1).innerHTML = baseStats.hp;
+            row.insertCell(2).innerHTML = baseStats.atk;
+            row.insertCell(3).innerHTML = baseStats.def;
+            row.insertCell(4).innerHTML = baseStats.spa;
+            row.insertCell(5).innerHTML = baseStats.spd;
+            row.insertCell(6).innerHTML = baseStats.spe;
+
+            hpTotal += baseStats.hp;
+            atkTotal += baseStats.atk;
+            defTotal += baseStats.def;
+            spaTotal += baseStats.spa;
+            spdTotal += baseStats.spd;
+            speTotal += baseStats.spe;
+        } else if (evs === undefined) {
             if (ivs === undefined) {
                 row.insertCell(1).innerHTML = baseStats.hp;
                 row.insertCell(2).innerHTML = baseStats.atk;
@@ -828,13 +867,14 @@ function setTypeCoverage(type) {
 
 function getLabel(number) {
     if (number === 0) {
-        return "I"
+        return "X"
     } else if (number === 1) {
-        return "N"
+        return "1"
     } else if (number > 0) {
-        return number + "xW"
+        return number + ""
     } else if (number < 0) {
-        return -number + "xR"
+        var frac = 1 / -number + "";
+        return frac.substring(0, 4);
     }
 }
 
