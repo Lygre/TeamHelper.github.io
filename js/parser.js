@@ -139,7 +139,12 @@ function parseInput() {
     if (input.indexOf("\n\n") > 0) {
         mons = input.split("\n\n");
     } else {
-        mons[0] = input;
+        var temp = input.split("\n");
+        if (parsePokemon(temp[1]) !== undefined) {
+            mons = temp;
+        } else {
+            mons[0] = input;
+        }
     }
     for (var i = 0; i < mons.length; i++) {
         if (mons[i].length > 2) {
@@ -241,6 +246,9 @@ function parsePokemon(raw) {
     else if (name === "hoopa-u") name = "hoopaunbound";
     name = name.replaceAll("-", "");
 
+    if(dex[name] === undefined) {
+        return;
+    }
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
 
