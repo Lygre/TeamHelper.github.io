@@ -139,7 +139,7 @@ function parseInput() {
     if (input.indexOf("\n\n") > 0) {
         mons = input.split("\n\n");
     } else {
-        mons = input.split("\n");
+        mons[0] = input;
     }
     for (var i = 0; i < mons.length; i++) {
         if (mons[i].length > 2) {
@@ -178,22 +178,22 @@ function parsePokemon(raw) {
     }
     name = name.replaceAll(" ", "").replaceAll("%", "").replaceAll(":", "");
     if (name.indexOf("m-") === 0) {
-        if(name.indexOf("charizard") > -1) {
-            var zardVariant = name.substring(name.length-1, name.length);
-            name = name.substring(0, name.length-1);
+        if (name.indexOf("charizard") > -1) {
+            var zardVariant = name.substring(name.length - 1, name.length);
+            name = name.substring(0, name.length - 1);
         }
         name = name.substring(2) + "mega";
-        if(zardVariant !== undefined) name += zardVariant;
+        if (zardVariant !== undefined) name += zardVariant;
     } else if (name.indexOf("-mega") > -1) {
-        if(name.indexOf("charizard") > -1) {
-            zardVariant = name.substring(name.length-1, name.length);
-            name = name.substring(0, name.length-1);
+        if (name.indexOf("charizard") > -1) {
+            zardVariant = name.substring(name.length - 1, name.length);
+            name = name.substring(0, name.length - 1);
         }
         name = name.substring(0, name.indexOf("-mega")) + "mega";
-        if(zardVariant !== undefined) name += zardVariant;
+        if (zardVariant !== undefined) name += zardVariant;
     }
     if (name.indexOf("-a") > -1) {
-        if(name.indexOf("greninja") < 0) name += "lola";
+        if (name.indexOf("greninja") < 0) name += "lola";
         else name += "sh";
     }
     if (name.indexOf("rotom-") > -1 && name.length === 7) {
@@ -229,18 +229,18 @@ function parsePokemon(raw) {
                 break;
         }
     }
-    else if(name === "thundurus-t") name = "thundurustherian";
-    else if(name === "thundurus-i") name = "thundurus";
-    else if(name === "tornadus-t") name = "tornadustherian";
-    else if(name === "tornadus-i") name = "tornadus";
-    else if(name === "landorus-t") name = "landorustherian";
-    else if(name === "landorus-i") name = "landorus";
-    else if(name === "kyurem-b") name = "kyuremblack";
-    else if(name === "kyurem-w") name = "kyuremwhite";
-    else if(name === "zygarde50") name = "zygarde";
-    else if(name === "hoopa-u") name = "hoopaunbound";
+    else if (name === "thundurus-t") name = "thundurustherian";
+    else if (name === "thundurus-i") name = "thundurus";
+    else if (name === "tornadus-t") name = "tornadustherian";
+    else if (name === "tornadus-i") name = "tornadus";
+    else if (name === "landorus-t") name = "landorustherian";
+    else if (name === "landorus-i") name = "landorus";
+    else if (name === "kyurem-b") name = "kyuremblack";
+    else if (name === "kyurem-w") name = "kyuremwhite";
+    else if (name === "zygarde50") name = "zygarde";
+    else if (name === "hoopa-u") name = "hoopaunbound";
     name = name.replaceAll("-", "");
-    console.log(name);
+
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
 
@@ -527,7 +527,32 @@ function populateWeaknessTable() {
         var weakness = teamWeaknesses[weakIndex];
         total.insertCell().innerHTML = getLabel(weakness);
     }
+    colorCodeWeaknessTable();
+}
 
+function colorCodeWeaknessTable() {
+    var weaknessTableRows = document.getElementById("matchupTableBody").children;
+    for (var i = 0; i < weaknessTableRows.length; i++) {
+        var currentRow = weaknessTableRows[i].children;
+        for (var j = 1; j < currentRow.length; j++) {
+            var cell = currentRow[j];
+            var num = parseFloat(cell.innerHTML);
+            if (!isNaN(num)) {
+                if (num > 1 && num < 4) {
+                    cell.style.backgroundColor = "#ffcccc";
+                } else if (num >= 4) {
+                    cell.style.backgroundColor = "#ff4d4d";
+                } else if (num < 1 && num > .25) {
+                    cell.style.backgroundColor = "#ccffcc"
+                } else if (num <= .25) {
+                    cell.style.backgroundColor = "#4dff4d"
+                }
+            } else {
+                cell.style.backgroundColor = "#616161";
+                cell.style.color = "#ffffff";
+            }
+        }
+    }
 }
 
 function populateOverview() {
@@ -584,6 +609,7 @@ function populateOverview() {
 }
 
 function populateStatTable() {
+    var baseOnly = document.getElementById("evIvSwitch").checked;
     var table = document.getElementById("statTableBody");
 
     table.innerHTML = "";
@@ -619,7 +645,21 @@ function populateStatTable() {
         var actualSpe = 0;
 
         row.insertCell(0).innerHTML = fullMon.species;
-        if (evs === undefined) {
+        if (baseOnly) {
+            row.insertCell(1).innerHTML = baseStats.hp;
+            row.insertCell(2).innerHTML = baseStats.atk;
+            row.insertCell(3).innerHTML = baseStats.def;
+            row.insertCell(4).innerHTML = baseStats.spa;
+            row.insertCell(5).innerHTML = baseStats.spd;
+            row.insertCell(6).innerHTML = baseStats.spe;
+
+            hpTotal += baseStats.hp;
+            atkTotal += baseStats.atk;
+            defTotal += baseStats.def;
+            spaTotal += baseStats.spa;
+            spdTotal += baseStats.spd;
+            speTotal += baseStats.spe;
+        } else if (evs === undefined) {
             if (ivs === undefined) {
                 row.insertCell(1).innerHTML = baseStats.hp;
                 row.insertCell(2).innerHTML = baseStats.atk;
@@ -776,6 +816,26 @@ function populateTypeCoverageTable() {
         Steel: false,
         Water: false
     };
+    var hasStabMoveType = {
+        Bug: false,
+        Dark: false,
+        Dragon: false,
+        Electric: false,
+        Fairy: false,
+        Fighting: false,
+        Fire: false,
+        Flying: false,
+        Ghost: false,
+        Grass: false,
+        Ground: false,
+        Ice: false,
+        Normal: false,
+        Poison: false,
+        Psychic: false,
+        Rock: false,
+        Steel: false,
+        Water: false
+    };
     for (var pokemon in team) {
         if (team.hasOwnProperty(pokemon)) {
             if (team[pokemon].move1 !== undefined) {
@@ -783,6 +843,13 @@ function populateTypeCoverageTable() {
                 var move1 = movedex[move1Name];
                 if (move1.basePower !== 0) {
                     hasMoveType[move1.type] = true;
+                    if (team[pokemon].types[0] === move1.type) {
+                        hasStabMoveType[move1.type] = true;
+                    } else if(team[pokemon].types[1] !== undefined) {
+                        if (team[pokemon].types[1] === move1.type) {
+                            hasStabMoveType[move1.type] = true;
+                        }
+                    }
                 }
             }
             if (team[pokemon].move2 !== undefined) {
@@ -791,6 +858,13 @@ function populateTypeCoverageTable() {
                 if (move2.basePower !== 0) {
                     hasMoveType[move2.type] = true;
                 }
+                if (team[pokemon].types[0] === move2.type) {
+                    hasStabMoveType[move2.type] = true;
+                } else if(team[pokemon].types[1] !== undefined) {
+                    if (team[pokemon].types[1] === move2.type) {
+                        hasStabMoveType[move2.type] = true;
+                    }
+                }
             }
             if (team[pokemon].move3 !== undefined) {
                 var move3Name = team[pokemon].move3.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
@@ -798,12 +872,26 @@ function populateTypeCoverageTable() {
                 if (move3.basePower !== 0) {
                     hasMoveType[move3.type] = true;
                 }
+                if (team[pokemon].types[0] === move3.type) {
+                    hasStabMoveType[move3.type] = true;
+                } else if(team[pokemon].types[1] !== undefined) {
+                    if (team[pokemon].types[1] === move3.type) {
+                        hasStabMoveType[move3.type] = true;
+                    }
+                }
             }
             if (team[pokemon].move4 !== undefined) {
                 var move4Name = team[pokemon].move4.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
                 var move4 = movedex[move4Name];
                 if (move4.basePower !== 0) {
                     hasMoveType[move4.type] = true;
+                }
+                if (team[pokemon].types[0] === move4.type) {
+                    hasStabMoveType[move4.type] = true;
+                } else if(team[pokemon].types[1] !== undefined) {
+                    if (team[pokemon].types[1] === move4.type) {
+                        hasStabMoveType[move4.type] = true;
+                    }
                 }
             }
         }
@@ -813,28 +901,36 @@ function populateTypeCoverageTable() {
         for (var currTypeWeakness in weaknessList) {
             if (weaknessList[currTypeWeakness]) {
                 if (hasMoveType[currTypeWeakness]) {
-                    setTypeCoverage(typeList[type]);
+                    setTypeCoverage(typeList[type], false);
+                }
+                if(hasStabMoveType[currTypeWeakness]) {
+                    setTypeCoverage(typeList[type], true)
                 }
             }
         }
     }
 }
 
-function setTypeCoverage(type) {
-    var span = document.getElementById(type.toLowerCase() + "Coverage");
+function setTypeCoverage(type, stab) {
+    if(stab) {
+        var span = document.getElementById(type.toLowerCase() + "Stab");
+    } else {
+        span = document.getElementById(type.toLowerCase() + "Coverage");
+    }
     span.innerHTML = "check circle";
     span.style.color = "green";
 }
 
 function getLabel(number) {
     if (number === 0) {
-        return "I"
+        return "X"
     } else if (number === 1) {
-        return "N"
+        return "1"
     } else if (number > 0) {
-        return number + "xW"
+        return number + ""
     } else if (number < 0) {
-        return -number + "xR"
+        var frac = 1 / -number + "";
+        return frac.substring(0, 4);
     }
 }
 
