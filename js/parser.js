@@ -140,15 +140,24 @@ function parseInput() {
         mons = input.split("\n\n");
     } else {
         var temp = input.split("\n");
-        if (parsePokemon(temp[1]) !== undefined) {
-            mons = temp;
+        if (temp.length > 1) {
+            if (parsePokemon(temp[1]) !== undefined) {
+                mons = temp;
+            } else {
+                mons[0] = input;
+            }
         } else {
             mons[0] = input;
         }
     }
     for (var i = 0; i < mons.length; i++) {
         if (mons[i].length > 2) {
-            team[i] = parsePokemon(mons[i]);
+            var mon = parsePokemon(mons[i]);
+            if (mon !== undefined) {
+                team.push(mon);
+            } else {
+                alert("Unable to retrieve Pokémon: '" + mons[i] + "'");
+            }
         }
     }
     for (var j = 0; j < team.length; j++) {
@@ -246,7 +255,7 @@ function parsePokemon(raw) {
     else if (name === "hoopa-u") name = "hoopaunbound";
     name = name.replaceAll("-", "");
 
-    if(dex[name] === undefined) {
+    if (dex[name] === undefined) {
         return;
     }
     var types = dex[name].types;
@@ -280,27 +289,62 @@ function parsePokemon(raw) {
                 spe: 31
             };
         }
+        console.log(evs);
+        console.log(ivs);
 
         var move1 = lines[4 + offset].substring(lines[4 + offset].indexOf("-") + 1, lines[4 + offset].length).replace("[", "").replace("]", "");
         var move2 = lines[5 + offset].substring(lines[5 + offset].indexOf("-") + 1, lines[5 + offset].length).replace("[", "").replace("]", "");
         var move3 = lines[6 + offset].substring(lines[6 + offset].indexOf("-") + 1, lines[6 + offset].length).replace("[", "").replace("]", "");
         var move4 = lines[7 + offset].substring(lines[7 + offset].indexOf("-") + 1, lines[7 + offset].length).replace("[", "").replace("]", "");
-    }
 
-    return {
-        name: name,
-        level: level,
-        types: types,
-        weaknesses: weaknesses,
-        item: item,
-        ability: ability,
-        nature: nature,
-        evs: evs,
-        ivs: ivs,
-        move1: move1,
-        move2: move2,
-        move3: move3,
-        move4: move4
+        return {
+            name: name,
+            level: level,
+            types: types,
+            weaknesses: weaknesses,
+            item: item,
+            ability: ability,
+            nature: nature,
+            evs: evs,
+            ivs: ivs,
+            move1: move1,
+            move2: move2,
+            move3: move3,
+            move4: move4
+        }
+    } else {
+        ivs = {
+            hp: 0,
+            atk: 0,
+            def: 0,
+            spa: 0,
+            spd: 0,
+            spe: 0
+        };
+        evs = {
+            hp: 0,
+            atk: 0,
+            def: 0,
+            spa: 0,
+            spd: 0,
+            spe: 0
+        };
+
+        return {
+            name: name,
+            level: 100,
+            types: types,
+            weaknesses: weaknesses,
+            item: item,
+            ability: undefined,
+            nature: "serious",
+            evs: evs,
+            ivs: ivs,
+            move1: undefined,
+            move2: undefined,
+            move3: undefined,
+            move4: undefined
+        }
     }
 }
 
@@ -368,7 +412,7 @@ function parseIVs(rawIVs) {
 function calcStat(pokemon, stat, ev, iv) {
     var b = dex[pokemon.name].baseStats[stat];
     var i = iv;
-    var e = ev;
+    var e = ev / 4;
     var l = pokemon.level;
     var n = 1;
 
@@ -380,6 +424,14 @@ function calcStat(pokemon, stat, ev, iv) {
     if (stat === "hp") {
         return Math.floor((2 * b + i + e) * l / 100 + l + 10);
     } else {
+        if (stat === "spd") {
+            console.log("B:" + b);
+            console.log("I:" + i);
+            console.log("E:" + ev + "/" + e);
+            console.log("L:" + l);
+            console.log("N:" + n);
+            console.log(Math.floor(Math.floor((2 * b + i + e) * l / 100 + 5) * n));
+        }
         return Math.floor(Math.floor((2 * b + i + e) * l / 100 + 5) * n);
     }
 }
@@ -650,6 +702,16 @@ function populateStatTable() {
             var fullMon = dex[team[mon].name];
             var baseStats = fullMon.baseStats;
 
+            var ivTotal = 0;
+            for(var iv in ivs) {
+                ivTotal += ivs[iv];
+            }
+
+            var evTotal = 0;
+            for(var ev in evs) {
+                evTotal += evs[ev];
+            }
+
             var actualHp = 0;
             var actualAtk = 0;
             var actualDef = 0;
@@ -658,7 +720,7 @@ function populateStatTable() {
             var actualSpe = 0;
 
             row.insertCell(0).innerHTML = fullMon.species;
-            if (baseOnly) {
+            if (baseOnly || (ivTotal === 0 && evTotal === 0)) {
                 row.insertCell(1).innerHTML = baseStats.hp;
                 row.insertCell(2).innerHTML = baseStats.atk;
                 row.insertCell(3).innerHTML = baseStats.def;
@@ -672,87 +734,27 @@ function populateStatTable() {
                 spaTotal += baseStats.spa;
                 spdTotal += baseStats.spd;
                 speTotal += baseStats.spe;
-            } else if (evs === undefined) {
-                if (ivs === undefined) {
-                    row.insertCell(1).innerHTML = baseStats.hp;
-                    row.insertCell(2).innerHTML = baseStats.atk;
-                    row.insertCell(3).innerHTML = baseStats.def;
-                    row.insertCell(4).innerHTML = baseStats.spa;
-                    row.insertCell(5).innerHTML = baseStats.spd;
-                    row.insertCell(6).innerHTML = baseStats.spe;
-
-                    hpTotal += baseStats.hp;
-                    atkTotal += baseStats.atk;
-                    defTotal += baseStats.def;
-                    spaTotal += baseStats.spa;
-                    spdTotal += baseStats.spd;
-                    speTotal += baseStats.spe;
-                } else {
-                    actualHp = calcStat(basicMon, "hp", 0, ivs.hp);
-                    actualAtk = calcStat(basicMon, "atk", 0, ivs.atk);
-                    actualDef = calcStat(basicMon, "def", 0, ivs.def);
-                    actualSpa = calcStat(basicMon, "spa", 0, ivs.spa);
-                    actualSpd = calcStat(basicMon, "spd", 0, ivs.spd);
-                    actualSpe = calcStat(basicMon, "spe", 0, ivs.spe);
-
-                    row.insertCell(1).innerHTML = actualHp.toString();
-                    row.insertCell(2).innerHTML = actualAtk.toString();
-                    row.insertCell(3).innerHTML = actualDef.toString();
-                    row.insertCell(4).innerHTML = actualSpa.toString();
-                    row.insertCell(5).innerHTML = actualSpd.toString();
-                    row.insertCell(6).innerHTML = actualSpe.toString();
-
-                    hpTotal += actualHp;
-                    atkTotal += actualAtk;
-                    defTotal += actualDef;
-                    spaTotal += actualSpa;
-                    spdTotal += actualSpd;
-                    speTotal += actualSpe;
-                }
             } else {
-                if (ivs === undefined) {
-                    actualHp = calcStat(basicMon, "hp", evs.hp, 0);
-                    actualAtk = calcStat(basicMon, "atk", evs.atk, 0);
-                    actualDef = calcStat(basicMon, "def", evs.def, 0);
-                    actualSpa = calcStat(basicMon, "spa", evs.spa, 0);
-                    actualSpd = calcStat(basicMon, "spd", evs.spd, 0);
-                    actualSpe = calcStat(basicMon, "spe", evs.spe, 0);
+                actualHp = calcStat(basicMon, "hp", evs.hp, ivs.hp);
+                actualAtk = calcStat(basicMon, "atk", evs.atk, ivs.atk);
+                actualDef = calcStat(basicMon, "def", evs.def, ivs.def);
+                actualSpa = calcStat(basicMon, "spa", evs.spa, ivs.spa);
+                actualSpd = calcStat(basicMon, "spd", evs.spa, ivs.spa);
+                actualSpe = calcStat(basicMon, "spe", evs.spe, ivs.spe);
 
-                    row.insertCell(1).innerHTML = actualHp.toString();
-                    row.insertCell(2).innerHTML = actualAtk.toString();
-                    row.insertCell(3).innerHTML = actualDef.toString();
-                    row.insertCell(4).innerHTML = actualSpa.toString();
-                    row.insertCell(5).innerHTML = actualSpd.toString();
-                    row.insertCell(6).innerHTML = actualSpe.toString();
+                row.insertCell(1).innerHTML = actualHp.toString();
+                row.insertCell(2).innerHTML = actualAtk.toString();
+                row.insertCell(3).innerHTML = actualDef.toString();
+                row.insertCell(4).innerHTML = actualSpa.toString();
+                row.insertCell(5).innerHTML = actualSpd.toString();
+                row.insertCell(6).innerHTML = actualSpe.toString();
 
-                    hpTotal += actualHp;
-                    atkTotal += actualAtk;
-                    defTotal += actualDef;
-                    spaTotal += actualSpa;
-                    spdTotal += actualSpd;
-                    speTotal += actualSpe;
-                } else {
-                    actualHp = calcStat(basicMon, "hp", evs.hp, ivs.hp);
-                    actualAtk = calcStat(basicMon, "atk", evs.atk, ivs.atk);
-                    actualDef = calcStat(basicMon, "def", evs.def, ivs.def);
-                    actualSpa = calcStat(basicMon, "spa", evs.spa, ivs.spa);
-                    actualSpd = calcStat(basicMon, "spd", evs.spa, ivs.spa);
-                    actualSpe = calcStat(basicMon, "spe", evs.spe, ivs.spe);
-
-                    row.insertCell(1).innerHTML = actualHp.toString();
-                    row.insertCell(2).innerHTML = actualAtk.toString();
-                    row.insertCell(3).innerHTML = actualDef.toString();
-                    row.insertCell(4).innerHTML = actualSpa.toString();
-                    row.insertCell(5).innerHTML = actualSpd.toString();
-                    row.insertCell(6).innerHTML = actualSpe.toString();
-
-                    hpTotal += actualHp;
-                    atkTotal += actualAtk;
-                    defTotal += actualDef;
-                    spaTotal += actualSpa;
-                    spdTotal += actualSpd;
-                    speTotal += actualSpe;
-                }
+                hpTotal += actualHp;
+                atkTotal += actualAtk;
+                defTotal += actualDef;
+                spaTotal += actualSpa;
+                spdTotal += actualSpd;
+                speTotal += actualSpe;
             }
 
             var bst = 0;
@@ -857,58 +859,58 @@ function populateTypeCoverageTable() {
             if (team[pokemon].move1 !== undefined) {
                 var move1Name = team[pokemon].move1.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
                 var move1 = movedex[move1Name];
-                if (move1.basePower !== 0) {
-                    hasMoveType[move1.type] = true;
-                    if (team[pokemon].types[0] === move1.type) {
-                        hasStabMoveType[move1.type] = true;
-                    } else if (team[pokemon].types[1] !== undefined) {
-                        if (team[pokemon].types[1] === move1.type) {
-                            hasStabMoveType[move1.type] = true;
-                        }
+                if (move1 !== undefined) {
+                    hasMoveType[move1.type] = move1.basePower !== 0;
+                    hasStabMoveType[move1.type] = team[pokemon].types[0] === move1.type;
+
+                    if (team[pokemon].types[1] !== undefined) {
+                        hasStabMoveType[move1.type] = team[pokemon].types[1] === move1.type;
                     }
+                } else {
+                    alert("Unkown move: '" + team[pokemon].move1 + "'");
                 }
             }
-            if (team[pokemon].move2 !== undefined) {
-                var move2Name = team[pokemon].move2.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
-                var move2 = movedex[move2Name];
-                if (move2.basePower !== 0) {
-                    hasMoveType[move2.type] = true;
+        }
+        if (team[pokemon].move2 !== undefined) {
+            var move2Name = team[pokemon].move2.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+            var move2 = movedex[move2Name];
+            if (move2 !== undefined) {
+                hasMoveType[move2.type] = move2.basePower !== 0;
+                hasStabMoveType[move2.type] = team[pokemon].types[0] === move2.type;
+
+                if (team[pokemon].types[1] !== undefined) {
+                    hasStabMoveType[move2.type] = team[pokemon].types[1] === move2.type;
                 }
-                if (team[pokemon].types[0] === move2.type) {
-                    hasStabMoveType[move2.type] = true;
-                } else if (team[pokemon].types[1] !== undefined) {
-                    if (team[pokemon].types[1] === move2.type) {
-                        hasStabMoveType[move2.type] = true;
-                    }
-                }
+            } else {
+                alert("Unknown move: '" + team[pokemon].move2 + "'");
             }
-            if (team[pokemon].move3 !== undefined) {
-                var move3Name = team[pokemon].move3.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
-                var move3 = movedex[move3Name];
-                if (move3.basePower !== 0) {
-                    hasMoveType[move3.type] = true;
+        }
+        if (team[pokemon].move3 !== undefined) {
+            var move3Name = team[pokemon].move3.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+            var move3 = movedex[move3Name];
+            if (move3 !== undefined) {
+                hasMoveType[move3.type] = move3.basePower !== 0;
+                hasStabMoveType[move3.type] = team[pokemon].types[0] === move3.type;
+
+                if (team[pokemon].types[1] !== undefined) {
+                    hasStabMoveType[move3.type] = team[pokemon].types[1] === move3.type;
                 }
-                if (team[pokemon].types[0] === move3.type) {
-                    hasStabMoveType[move3.type] = true;
-                } else if (team[pokemon].types[1] !== undefined) {
-                    if (team[pokemon].types[1] === move3.type) {
-                        hasStabMoveType[move3.type] = true;
-                    }
-                }
+            } else {
+                alert("Unknown move: '" + team[pokemon].move3 + "'");
             }
-            if (team[pokemon].move4 !== undefined) {
-                var move4Name = team[pokemon].move4.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
-                var move4 = movedex[move4Name];
-                if (move4.basePower !== 0) {
-                    hasMoveType[move4.type] = true;
+        }
+        if (team[pokemon].move4 !== undefined) {
+            var move4Name = team[pokemon].move4.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+            var move4 = movedex[move4Name];
+            if (move4 !== undefined) {
+                hasMoveType[move4.type] = move4.basePower !== 0;
+                hasStabMoveType[move4.type] = team[pokemon].types[0] === move4.type;
+
+                if (team[pokemon].types[1] !== undefined) {
+                    hasStabMoveType[move4.type] = team[pokemon].types[1] === move4.type;
                 }
-                if (team[pokemon].types[0] === move4.type) {
-                    hasStabMoveType[move4.type] = true;
-                } else if (team[pokemon].types[1] !== undefined) {
-                    if (team[pokemon].types[1] === move4.type) {
-                        hasStabMoveType[move4.type] = true;
-                    }
-                }
+            } else {
+                alert("Unknown move: '" + team[pokemon].move4 + "'");
             }
         }
     }
