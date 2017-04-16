@@ -8,6 +8,10 @@
     max-width: 100vw;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 td {
     padding-left: 1em;
 }
