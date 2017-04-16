@@ -496,38 +496,40 @@ function setWeaknesses(matchups, reset) {
 function populateWeaknessTable() {
     var matchupTableBody = document.getElementById("matchupTableBody");
     matchupTableBody.innerHTML = "";
-    for (var index in team) {
-        var pokemon = team[index];
+    if (team.length > 0) {
+        for (var index in team) {
+            var pokemon = team[index];
 
-        var row = matchupTableBody.insertRow();
-        row.insertCell().innerHTML = dex[pokemon.name].species;
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Bug);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Dark);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Dragon);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Electric);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Fairy);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Fighting);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Fire);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Flying);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Ghost);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Grass);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Ground);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Ice);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Normal);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Poison);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Psychic);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Rock);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Steel);
-        row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Water);
-    }
+            var row = matchupTableBody.insertRow();
+            row.insertCell().innerHTML = dex[pokemon.name].species;
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Bug);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Dark);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Dragon);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Electric);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Fairy);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Fighting);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Fire);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Flying);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Ghost);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Grass);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Ground);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Ice);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Normal);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Poison);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Psychic);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Rock);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Steel);
+            row.insertCell().innerHTML = getLabel(pokemon.weaknesses.Water);
+        }
 
-    var total = matchupTableBody.insertRow();
-    total.insertCell().innerHTML = "Total:";
-    for (var weakIndex in teamWeaknesses) {
-        var weakness = teamWeaknesses[weakIndex];
-        total.insertCell().innerHTML = getLabel(weakness);
+        var total = matchupTableBody.insertRow();
+        total.insertCell().innerHTML = "Total:";
+        for (var weakIndex in teamWeaknesses) {
+            var weakness = teamWeaknesses[weakIndex];
+            total.insertCell().innerHTML = getLabel(weakness);
+        }
+        colorCodeWeaknessTable();
     }
-    colorCodeWeaknessTable();
 }
 
 function colorCodeWeaknessTable() {
@@ -568,44 +570,46 @@ function populateOverview() {
 
     var immune = 0;
 
-    for (var type in teamWeaknesses) {
-        var weakness = teamWeaknesses[type];
-        if (weakness < 0) {
-            if (weakness <= -16) {
-                sixResist++;
-            } else if (weakness <= -8) {
-                eightResist++;
-            } else if (weakness <= -4) {
-                fourResist++;
-            } else if (weakness <= -2) {
-                twoResist++;
+    if (team.length > 0) {
+        for (var type in teamWeaknesses) {
+            var weakness = teamWeaknesses[type];
+            if (weakness < 0) {
+                if (weakness <= -16) {
+                    sixResist++;
+                } else if (weakness <= -8) {
+                    eightResist++;
+                } else if (weakness <= -4) {
+                    fourResist++;
+                } else if (weakness <= -2) {
+                    twoResist++;
+                }
+            } else if (weakness > 0) {
+                if (weakness >= 16) {
+                    sixWeak++;
+                } else if (weakness >= 8) {
+                    eightWeak++;
+                } else if (weakness >= 4) {
+                    fourWeak++;
+                } else if (weakness >= 2) {
+                    twoWeak++;
+                }
+            } else {
+                immune++;
             }
-        } else if (weakness > 0) {
-            if (weakness >= 16) {
-                sixWeak++;
-            } else if (weakness >= 8) {
-                eightWeak++;
-            } else if (weakness >= 4) {
-                fourWeak++;
-            } else if (weakness >= 2) {
-                twoWeak++;
-            }
-        } else {
-            immune++;
         }
+
+        document.getElementById("16xResist").innerHTML = sixResist.toString();
+        document.getElementById("8xResist").innerHTML = eightResist.toString();
+        document.getElementById("4xResist").innerHTML = fourResist.toString();
+        document.getElementById("2xResist").innerHTML = twoResist.toString();
+
+        document.getElementById("16xWeak").innerHTML = sixWeak.toString();
+        document.getElementById("8xWeak").innerHTML = eightWeak.toString();
+        document.getElementById("4xWeak").innerHTML = fourWeak.toString();
+        document.getElementById("2xWeak").innerHTML = twoWeak.toString();
+
+        document.getElementById("immune").innerHTML = immune.toString();
     }
-
-    document.getElementById("16xResist").innerHTML = sixResist.toString();
-    document.getElementById("8xResist").innerHTML = eightResist.toString();
-    document.getElementById("4xResist").innerHTML = fourResist.toString();
-    document.getElementById("2xResist").innerHTML = twoResist.toString();
-
-    document.getElementById("16xWeak").innerHTML = sixWeak.toString();
-    document.getElementById("8xWeak").innerHTML = eightWeak.toString();
-    document.getElementById("4xWeak").innerHTML = fourWeak.toString();
-    document.getElementById("2xWeak").innerHTML = twoWeak.toString();
-
-    document.getElementById("immune").innerHTML = immune.toString();
 }
 
 function populateStatTable() {
@@ -614,53 +618,39 @@ function populateStatTable() {
 
     table.innerHTML = "";
 
-    var index = 0;
+    if (team.length > 0) {
+        var index = 0;
 
-    var hpTotal = 0;
-    var atkTotal = 0;
-    var defTotal = 0;
-    var spaTotal = 0;
-    var spdTotal = 0;
-    var speTotal = 0;
-    var bstTotal = 0;
+        var hpTotal = 0;
+        var atkTotal = 0;
+        var defTotal = 0;
+        var spaTotal = 0;
+        var spdTotal = 0;
+        var speTotal = 0;
+        var bstTotal = 0;
 
-    for (var mon in team) {
-        var row = table.insertRow(index);
-        if (index % 2 === 0) {
-            row.style.backgroundColor = "#f2f2f2";
-        }
-        index++;
+        for (var mon in team) {
+            var row = table.insertRow(index);
+            if (index % 2 === 0) {
+                row.style.backgroundColor = "#f2f2f2";
+            }
+            index++;
 
-        var basicMon = team[mon];
-        var evs = basicMon.evs;
-        var ivs = basicMon.ivs;
-        var fullMon = dex[team[mon].name];
-        var baseStats = fullMon.baseStats;
+            var basicMon = team[mon];
+            var evs = basicMon.evs;
+            var ivs = basicMon.ivs;
+            var fullMon = dex[team[mon].name];
+            var baseStats = fullMon.baseStats;
 
-        var actualHp = 0;
-        var actualAtk = 0;
-        var actualDef = 0;
-        var actualSpa = 0;
-        var actualSpd = 0;
-        var actualSpe = 0;
+            var actualHp = 0;
+            var actualAtk = 0;
+            var actualDef = 0;
+            var actualSpa = 0;
+            var actualSpd = 0;
+            var actualSpe = 0;
 
-        row.insertCell(0).innerHTML = fullMon.species;
-        if (baseOnly) {
-            row.insertCell(1).innerHTML = baseStats.hp;
-            row.insertCell(2).innerHTML = baseStats.atk;
-            row.insertCell(3).innerHTML = baseStats.def;
-            row.insertCell(4).innerHTML = baseStats.spa;
-            row.insertCell(5).innerHTML = baseStats.spd;
-            row.insertCell(6).innerHTML = baseStats.spe;
-
-            hpTotal += baseStats.hp;
-            atkTotal += baseStats.atk;
-            defTotal += baseStats.def;
-            spaTotal += baseStats.spa;
-            spdTotal += baseStats.spd;
-            speTotal += baseStats.spe;
-        } else if (evs === undefined) {
-            if (ivs === undefined) {
+            row.insertCell(0).innerHTML = fullMon.species;
+            if (baseOnly) {
                 row.insertCell(1).innerHTML = baseStats.hp;
                 row.insertCell(2).innerHTML = baseStats.atk;
                 row.insertCell(3).innerHTML = baseStats.def;
@@ -674,115 +664,133 @@ function populateStatTable() {
                 spaTotal += baseStats.spa;
                 spdTotal += baseStats.spd;
                 speTotal += baseStats.spe;
+            } else if (evs === undefined) {
+                if (ivs === undefined) {
+                    row.insertCell(1).innerHTML = baseStats.hp;
+                    row.insertCell(2).innerHTML = baseStats.atk;
+                    row.insertCell(3).innerHTML = baseStats.def;
+                    row.insertCell(4).innerHTML = baseStats.spa;
+                    row.insertCell(5).innerHTML = baseStats.spd;
+                    row.insertCell(6).innerHTML = baseStats.spe;
+
+                    hpTotal += baseStats.hp;
+                    atkTotal += baseStats.atk;
+                    defTotal += baseStats.def;
+                    spaTotal += baseStats.spa;
+                    spdTotal += baseStats.spd;
+                    speTotal += baseStats.spe;
+                } else {
+                    actualHp = calcStat(basicMon, "hp", 0, ivs.hp);
+                    actualAtk = calcStat(basicMon, "atk", 0, ivs.atk);
+                    actualDef = calcStat(basicMon, "def", 0, ivs.def);
+                    actualSpa = calcStat(basicMon, "spa", 0, ivs.spa);
+                    actualSpd = calcStat(basicMon, "spd", 0, ivs.spd);
+                    actualSpe = calcStat(basicMon, "spe", 0, ivs.spe);
+
+                    row.insertCell(1).innerHTML = actualHp.toString();
+                    row.insertCell(2).innerHTML = actualAtk.toString();
+                    row.insertCell(3).innerHTML = actualDef.toString();
+                    row.insertCell(4).innerHTML = actualSpa.toString();
+                    row.insertCell(5).innerHTML = actualSpd.toString();
+                    row.insertCell(6).innerHTML = actualSpe.toString();
+
+                    hpTotal += actualHp;
+                    atkTotal += actualAtk;
+                    defTotal += actualDef;
+                    spaTotal += actualSpa;
+                    spdTotal += actualSpd;
+                    speTotal += actualSpe;
+                }
             } else {
-                actualHp = calcStat(basicMon, "hp", 0, ivs.hp);
-                actualAtk = calcStat(basicMon, "atk", 0, ivs.atk);
-                actualDef = calcStat(basicMon, "def", 0, ivs.def);
-                actualSpa = calcStat(basicMon, "spa", 0, ivs.spa);
-                actualSpd = calcStat(basicMon, "spd", 0, ivs.spd);
-                actualSpe = calcStat(basicMon, "spe", 0, ivs.spe);
+                if (ivs === undefined) {
+                    actualHp = calcStat(basicMon, "hp", evs.hp, 0);
+                    actualAtk = calcStat(basicMon, "atk", evs.atk, 0);
+                    actualDef = calcStat(basicMon, "def", evs.def, 0);
+                    actualSpa = calcStat(basicMon, "spa", evs.spa, 0);
+                    actualSpd = calcStat(basicMon, "spd", evs.spd, 0);
+                    actualSpe = calcStat(basicMon, "spe", evs.spe, 0);
 
-                row.insertCell(1).innerHTML = actualHp.toString();
-                row.insertCell(2).innerHTML = actualAtk.toString();
-                row.insertCell(3).innerHTML = actualDef.toString();
-                row.insertCell(4).innerHTML = actualSpa.toString();
-                row.insertCell(5).innerHTML = actualSpd.toString();
-                row.insertCell(6).innerHTML = actualSpe.toString();
+                    row.insertCell(1).innerHTML = actualHp.toString();
+                    row.insertCell(2).innerHTML = actualAtk.toString();
+                    row.insertCell(3).innerHTML = actualDef.toString();
+                    row.insertCell(4).innerHTML = actualSpa.toString();
+                    row.insertCell(5).innerHTML = actualSpd.toString();
+                    row.insertCell(6).innerHTML = actualSpe.toString();
 
-                hpTotal += actualHp;
-                atkTotal += actualAtk;
-                defTotal += actualDef;
-                spaTotal += actualSpa;
-                spdTotal += actualSpd;
-                speTotal += actualSpe;
+                    hpTotal += actualHp;
+                    atkTotal += actualAtk;
+                    defTotal += actualDef;
+                    spaTotal += actualSpa;
+                    spdTotal += actualSpd;
+                    speTotal += actualSpe;
+                } else {
+                    actualHp = calcStat(basicMon, "hp", evs.hp, ivs.hp);
+                    actualAtk = calcStat(basicMon, "atk", evs.atk, ivs.atk);
+                    actualDef = calcStat(basicMon, "def", evs.def, ivs.def);
+                    actualSpa = calcStat(basicMon, "spa", evs.spa, ivs.spa);
+                    actualSpd = calcStat(basicMon, "spd", evs.spa, ivs.spa);
+                    actualSpe = calcStat(basicMon, "spe", evs.spe, ivs.spe);
+
+                    row.insertCell(1).innerHTML = actualHp.toString();
+                    row.insertCell(2).innerHTML = actualAtk.toString();
+                    row.insertCell(3).innerHTML = actualDef.toString();
+                    row.insertCell(4).innerHTML = actualSpa.toString();
+                    row.insertCell(5).innerHTML = actualSpd.toString();
+                    row.insertCell(6).innerHTML = actualSpe.toString();
+
+                    hpTotal += actualHp;
+                    atkTotal += actualAtk;
+                    defTotal += actualDef;
+                    spaTotal += actualSpa;
+                    spdTotal += actualSpd;
+                    speTotal += actualSpe;
+                }
             }
-        } else {
-            if (ivs === undefined) {
-                actualHp = calcStat(basicMon, "hp", evs.hp, 0);
-                actualAtk = calcStat(basicMon, "atk", evs.atk, 0);
-                actualDef = calcStat(basicMon, "def", evs.def, 0);
-                actualSpa = calcStat(basicMon, "spa", evs.spa, 0);
-                actualSpd = calcStat(basicMon, "spd", evs.spd, 0);
-                actualSpe = calcStat(basicMon, "spe", evs.spe, 0);
 
-                row.insertCell(1).innerHTML = actualHp.toString();
-                row.insertCell(2).innerHTML = actualAtk.toString();
-                row.insertCell(3).innerHTML = actualDef.toString();
-                row.insertCell(4).innerHTML = actualSpa.toString();
-                row.insertCell(5).innerHTML = actualSpd.toString();
-                row.insertCell(6).innerHTML = actualSpe.toString();
-
-                hpTotal += actualHp;
-                atkTotal += actualAtk;
-                defTotal += actualDef;
-                spaTotal += actualSpa;
-                spdTotal += actualSpd;
-                speTotal += actualSpe;
-            } else {
-                actualHp = calcStat(basicMon, "hp", evs.hp, ivs.hp);
-                actualAtk = calcStat(basicMon, "atk", evs.atk, ivs.atk);
-                actualDef = calcStat(basicMon, "def", evs.def, ivs.def);
-                actualSpa = calcStat(basicMon, "spa", evs.spa, ivs.spa);
-                actualSpd = calcStat(basicMon, "spd", evs.spa, ivs.spa);
-                actualSpe = calcStat(basicMon, "spe", evs.spe, ivs.spe);
-
-                row.insertCell(1).innerHTML = actualHp.toString();
-                row.insertCell(2).innerHTML = actualAtk.toString();
-                row.insertCell(3).innerHTML = actualDef.toString();
-                row.insertCell(4).innerHTML = actualSpa.toString();
-                row.insertCell(5).innerHTML = actualSpd.toString();
-                row.insertCell(6).innerHTML = actualSpe.toString();
-
-                hpTotal += actualHp;
-                atkTotal += actualAtk;
-                defTotal += actualDef;
-                spaTotal += actualSpa;
-                spdTotal += actualSpd;
-                speTotal += actualSpe;
+            var bst = 0;
+            for (var stat in fullMon.baseStats) {
+                bst += baseStats[stat];
             }
+            row.insertCell(7).innerHTML = bst.toString();
+            bstTotal += bst;
         }
 
-        var bst = 0;
-        for (var stat in fullMon.baseStats) {
-            bst += baseStats[stat];
+        var averageRow = table.insertRow(index);
+        if (index % 2 === 0) {
+            averageRow.style.backgroundColor = "#f2f2f2";
         }
-        row.insertCell(7).innerHTML = bst.toString();
-        bstTotal += bst;
+        var averageLabel = averageRow.insertCell(0);
+        averageLabel.innerHTML = "Averages:";
+        averageLabel.style.fontWeight = "Bold";
+
+        averageRow.insertCell(1).innerHTML = Math.floor((hpTotal / team.length)).toString();
+        averageRow.insertCell(2).innerHTML = Math.floor((atkTotal / team.length)).toString();
+        averageRow.insertCell(3).innerHTML = Math.floor((defTotal / team.length)).toString();
+        averageRow.insertCell(4).innerHTML = Math.floor((spaTotal / team.length)).toString();
+        averageRow.insertCell(5).innerHTML = Math.floor((spdTotal / team.length)).toString();
+        averageRow.insertCell(6).innerHTML = Math.floor((speTotal / team.length)).toString();
+        averageRow.insertCell(7).innerHTML = Math.floor((bstTotal / team.length)).toString();
+
+        index++;
+
+        var totalRow = table.insertRow(index);
+        if (index % 2 === 0) {
+            totalRow.style.backgroundColor = "#f2f2f2";
+        }
+        var totalLabel = totalRow.insertCell(0);
+        totalLabel.innerHTML = "Totals:";
+        totalLabel.style.fontWeight = "Bold";
+
+        totalRow.insertCell(1).innerHTML = (hpTotal).toString();
+        totalRow.insertCell(2).innerHTML = (atkTotal).toString();
+        totalRow.insertCell(3).innerHTML = (defTotal).toString();
+        totalRow.insertCell(4).innerHTML = (spaTotal).toString();
+        totalRow.insertCell(5).innerHTML = (spdTotal).toString();
+        totalRow.insertCell(6).innerHTML = (speTotal).toString();
+        totalRow.insertCell(7).innerHTML = (bstTotal).toString();
+    } else {
+
     }
-
-    var averageRow = table.insertRow(index);
-    if (index % 2 === 0) {
-        averageRow.style.backgroundColor = "#f2f2f2";
-    }
-    var averageLabel = averageRow.insertCell(0);
-    averageLabel.innerHTML = "Averages:";
-    averageLabel.style.fontWeight = "Bold";
-
-    averageRow.insertCell(1).innerHTML = Math.floor((hpTotal / team.length)).toString();
-    averageRow.insertCell(2).innerHTML = Math.floor((atkTotal / team.length)).toString();
-    averageRow.insertCell(3).innerHTML = Math.floor((defTotal / team.length)).toString();
-    averageRow.insertCell(4).innerHTML = Math.floor((spaTotal / team.length)).toString();
-    averageRow.insertCell(5).innerHTML = Math.floor((spdTotal / team.length)).toString();
-    averageRow.insertCell(6).innerHTML = Math.floor((speTotal / team.length)).toString();
-    averageRow.insertCell(7).innerHTML = Math.floor((bstTotal / team.length)).toString();
-
-    index++;
-
-    var totalRow = table.insertRow(index);
-    if (index % 2 === 0) {
-        totalRow.style.backgroundColor = "#f2f2f2";
-    }
-    var totalLabel = totalRow.insertCell(0);
-    totalLabel.innerHTML = "Totals:";
-    totalLabel.style.fontWeight = "Bold";
-
-    totalRow.insertCell(1).innerHTML = (hpTotal).toString();
-    totalRow.insertCell(2).innerHTML = (atkTotal).toString();
-    totalRow.insertCell(3).innerHTML = (defTotal).toString();
-    totalRow.insertCell(4).innerHTML = (spaTotal).toString();
-    totalRow.insertCell(5).innerHTML = (spdTotal).toString();
-    totalRow.insertCell(6).innerHTML = (speTotal).toString();
-    totalRow.insertCell(7).innerHTML = (bstTotal).toString();
 }
 
 function resetTypeCoverageTable() {
@@ -845,7 +853,7 @@ function populateTypeCoverageTable() {
                     hasMoveType[move1.type] = true;
                     if (team[pokemon].types[0] === move1.type) {
                         hasStabMoveType[move1.type] = true;
-                    } else if(team[pokemon].types[1] !== undefined) {
+                    } else if (team[pokemon].types[1] !== undefined) {
                         if (team[pokemon].types[1] === move1.type) {
                             hasStabMoveType[move1.type] = true;
                         }
@@ -860,7 +868,7 @@ function populateTypeCoverageTable() {
                 }
                 if (team[pokemon].types[0] === move2.type) {
                     hasStabMoveType[move2.type] = true;
-                } else if(team[pokemon].types[1] !== undefined) {
+                } else if (team[pokemon].types[1] !== undefined) {
                     if (team[pokemon].types[1] === move2.type) {
                         hasStabMoveType[move2.type] = true;
                     }
@@ -874,7 +882,7 @@ function populateTypeCoverageTable() {
                 }
                 if (team[pokemon].types[0] === move3.type) {
                     hasStabMoveType[move3.type] = true;
-                } else if(team[pokemon].types[1] !== undefined) {
+                } else if (team[pokemon].types[1] !== undefined) {
                     if (team[pokemon].types[1] === move3.type) {
                         hasStabMoveType[move3.type] = true;
                     }
@@ -888,7 +896,7 @@ function populateTypeCoverageTable() {
                 }
                 if (team[pokemon].types[0] === move4.type) {
                     hasStabMoveType[move4.type] = true;
-                } else if(team[pokemon].types[1] !== undefined) {
+                } else if (team[pokemon].types[1] !== undefined) {
                     if (team[pokemon].types[1] === move4.type) {
                         hasStabMoveType[move4.type] = true;
                     }
@@ -903,7 +911,7 @@ function populateTypeCoverageTable() {
                 if (hasMoveType[currTypeWeakness]) {
                     setTypeCoverage(typeList[type], false);
                 }
-                if(hasStabMoveType[currTypeWeakness]) {
+                if (hasStabMoveType[currTypeWeakness]) {
                     setTypeCoverage(typeList[type], true)
                 }
             }
@@ -912,7 +920,7 @@ function populateTypeCoverageTable() {
 }
 
 function setTypeCoverage(type, stab) {
-    if(stab) {
+    if (stab) {
         var span = document.getElementById(type.toLowerCase() + "Stab");
     } else {
         span = document.getElementById(type.toLowerCase() + "Coverage");
