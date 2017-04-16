@@ -136,10 +136,11 @@ function parseInput() {
     team = [];
 
     var mons = [];
+    console.log(JSON.stringify(input));
     if (input.indexOf("\n\n") > 0) {
         mons = input.split("\n\n");
     } else {
-        mons = input.split("\n");
+        mons[0] = input;
     }
     for (var i = 0; i < mons.length; i++) {
         if (mons[i].length > 2) {
@@ -240,6 +241,8 @@ function parsePokemon(raw) {
     else if (name === "zygarde50") name = "zygarde";
     else if (name === "hoopa-u") name = "hoopaunbound";
     name = name.replaceAll("-", "");
+    console.log(name);
+
     var types = dex[name].types;
     var weaknesses = getPokemonWeaknesses(name);
 
@@ -815,6 +818,26 @@ function populateTypeCoverageTable() {
         Steel: false,
         Water: false
     };
+    var hasStabMoveType = {
+        Bug: false,
+        Dark: false,
+        Dragon: false,
+        Electric: false,
+        Fairy: false,
+        Fighting: false,
+        Fire: false,
+        Flying: false,
+        Ghost: false,
+        Grass: false,
+        Ground: false,
+        Ice: false,
+        Normal: false,
+        Poison: false,
+        Psychic: false,
+        Rock: false,
+        Steel: false,
+        Water: false
+    };
     for (var pokemon in team) {
         if (team.hasOwnProperty(pokemon)) {
             if (team[pokemon].move1 !== undefined) {
@@ -822,6 +845,13 @@ function populateTypeCoverageTable() {
                 var move1 = movedex[move1Name];
                 if (move1.basePower !== 0) {
                     hasMoveType[move1.type] = true;
+                    if (team[pokemon].types[0] === move1.type) {
+                        hasStabMoveType[move1.type] = true;
+                    } else if(team[pokemon].types[1] !== undefined) {
+                        if (team[pokemon].types[1] === move1.type) {
+                            hasStabMoveType[move1.type] = true;
+                        }
+                    }
                 }
             }
             if (team[pokemon].move2 !== undefined) {
@@ -830,6 +860,13 @@ function populateTypeCoverageTable() {
                 if (move2.basePower !== 0) {
                     hasMoveType[move2.type] = true;
                 }
+                if (team[pokemon].types[0] === move2.type) {
+                    hasStabMoveType[move2.type] = true;
+                } else if(team[pokemon].types[1] !== undefined) {
+                    if (team[pokemon].types[1] === move2.type) {
+                        hasStabMoveType[move2.type] = true;
+                    }
+                }
             }
             if (team[pokemon].move3 !== undefined) {
                 var move3Name = team[pokemon].move3.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
@@ -837,12 +874,26 @@ function populateTypeCoverageTable() {
                 if (move3.basePower !== 0) {
                     hasMoveType[move3.type] = true;
                 }
+                if (team[pokemon].types[0] === move3.type) {
+                    hasStabMoveType[move3.type] = true;
+                } else if(team[pokemon].types[1] !== undefined) {
+                    if (team[pokemon].types[1] === move3.type) {
+                        hasStabMoveType[move3.type] = true;
+                    }
+                }
             }
             if (team[pokemon].move4 !== undefined) {
                 var move4Name = team[pokemon].move4.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
                 var move4 = movedex[move4Name];
                 if (move4.basePower !== 0) {
                     hasMoveType[move4.type] = true;
+                }
+                if (team[pokemon].types[0] === move4.type) {
+                    hasStabMoveType[move4.type] = true;
+                } else if(team[pokemon].types[1] !== undefined) {
+                    if (team[pokemon].types[1] === move4.type) {
+                        hasStabMoveType[move4.type] = true;
+                    }
                 }
             }
         }
@@ -852,15 +903,22 @@ function populateTypeCoverageTable() {
         for (var currTypeWeakness in weaknessList) {
             if (weaknessList[currTypeWeakness]) {
                 if (hasMoveType[currTypeWeakness]) {
-                    setTypeCoverage(typeList[type]);
+                    setTypeCoverage(typeList[type], false);
+                }
+                if(hasStabMoveType[currTypeWeakness]) {
+                    setTypeCoverage(typeList[type], true)
                 }
             }
         }
     }
 }
 
-function setTypeCoverage(type) {
-    var span = document.getElementById(type.toLowerCase() + "Coverage");
+function setTypeCoverage(type, stab) {
+    if(stab) {
+        var span = document.getElementById(type.toLowerCase() + "Stab");
+    } else {
+        span = document.getElementById(type.toLowerCase() + "Coverage");
+    }
     span.innerHTML = "check circle";
     span.style.color = "green";
 }

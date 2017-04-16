@@ -32,8 +32,8 @@
             <li class="tab col s4">
                 <a href="#matchups">Weaknesses</a>
             </li>
-            <li class="tab col s3">
-                <a href="#coverage">Coverage</a>
+            <li class="tab col s3 selected">
+                <a href="#coverage" class="">Coverage</a>
             </li>
         </ul>
     </div>
@@ -148,62 +148,83 @@
     <table class="striped responsive-table">
         <thead>
         <tr>
-            <th data-field="typeLabel">Type</th>
-            <th data-field="coverageLabel">Coverage?</th>
-            <th data-field="typeLabel">Type</th>
-            <th data-field="coverageLabel">Coverage?</th>
-            <th data-field="typeLabel">Type</th>
-            <th data-field="coverageLabel">Coverage?</th>
+            <th>Type</th>
+            <th>Coverage?</th>
+            <th>STAB?</th>
+            <th>Type</th>
+            <th>Coverage?</th>
+            <th>STAB?</th>
+            <th>Type</th>
+            <th>Coverage?</th>
+            <th>STAB?</th>
         </tr>
         </thead>
         <tbody>
         <tr>
             <td><span class="type bug">Bug</span></td>
             <td><span id="bugCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="bugStab" class="material-icons" style="color:red;">cancel</span></td>
             <td><span class="type fire">Fire</span></td>
             <td><span id="fireCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="fireStab" class="material-icons" style="color:red;">cancel</span></td>
             <td><span class="type normal">Normal</span></td>
             <td><span id="normalCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="normalStab" class="material-icons" style="color:red;">cancel</span></td>
         </tr>
         <tr>
             <td><span class="type dark">Dark</span></td>
             <td><span id="darkCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="darkStab" class="material-icons" style="color:red;">cancel</span></td>
             <td><span class="type flying">Flying</span></td>
             <td><span id="flyingCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="flyingStab" class="material-icons" style="color:red;">cancel</span></td>
             <td><span class="type poison">Poison</span></td>
             <td><span id="poisonCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="poisonStab" class="material-icons" style="color:red;">cancel</span></td>
         </tr>
         <tr>
             <td><span class="type dragon">Dragon</span></td>
             <td><span id="dragonCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="dragonStab" class="material-icons" style="color:red;">cancel</span></td>
             <td><span class="type ghost">Ghost</span></td>
             <td><span id="ghostCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="ghostStab" class="material-icons" style="color:red;">cancel</span></td>
             <td><span class="type psychic">Psychic</span></td>
             <td><span id="psychicCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="psychicStab" class="material-icons" style="color:red;">cancel</span></td>
         </tr>
         <tr>
             <td><span class="type electric">Electric</span></td>
             <td><span id="electricCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="electricStab" class="material-icons" style="color:red;">cancel</span></td>
             <td><span class="type grass">Grass</span></td>
             <td><span id="grassCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="grassStab" class="material-icons" style="color:red;">cancel</span></td>
             <td><span class="type rock">Rock</span></td>
             <td><span id="rockCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="rockStab" class="material-icons" style="color:red;">cancel</span></td>
         </tr>
         <tr>
             <td><span class="type fairy">Fairy</span></td>
             <td><span id="fairyCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="fairyStab" class="material-icons" style="color:red;">cancel</span></td>
             <td><span class="type ground">Ground</span></td>
             <td><span id="groundCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="groundStab" class="material-icons" style="color:red;">cancel</span></td>
             <td><span class="type steel">Steel</span></td>
             <td><span id="steelCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="steelStab" class="material-icons" style="color:red;">cancel</span></td>
         </tr>
         <tr>
             <td><span class="type fighting">Fighting</span></td>
             <td><span id="fightingCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="fightingStab" class="material-icons" style="color:red;">cancel</span></td>
             <td><span class="type ice">Ice</span></td>
             <td><span id="iceCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="iceStab" class="material-icons" style="color:red;">cancel</span></td>
             <td><span class="type water">Water</span></td>
             <td><span id="waterCoverage" class="material-icons" style="color:red;">cancel</span></td>
+            <td><span id="waterStab" class="material-icons" style="color:red;">cancel</span></td>
         </tr>
         </tbody>
     </table>
