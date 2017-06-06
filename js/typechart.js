@@ -843,11 +843,11 @@ var weaknesses = {
     },
     "Fairy": {
         "Bug": false,
-        "Dark": true,
-        "Dragon": true,
+        "Dark": false,
+        "Dragon": false,
         "Electric": false,
         "Fairy": false,
-        "Fighting": true,
+        "Fighting": false,
         "Fire": false,
         "Flying": false,
         "Ghost": false,
@@ -937,7 +937,7 @@ var weaknesses = {
         "Normal": false,
         "Poison": false,
         "Psychic": true,
-        "Rock": true,
+        "Rock": false,
         "Steel": false,
         "Water": false
     },
@@ -952,14 +952,14 @@ var weaknesses = {
         "Flying": true,
         "Ghost": false,
         "Grass": false,
-        "Ground": true,
+        "Ground": false,
         "Ice": true,
         "Normal": false,
         "Poison": true,
         "Psychic": false,
-        "Rock": true,
+        "Rock": false,
         "Steel": false,
-        "Water": true
+        "Water": false
     },
     "Ground": {
         "Bug": false,
