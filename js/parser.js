@@ -686,6 +686,8 @@ function populateOverview() {
 
         document.getElementById("immune").innerHTML = immune.toString();
     }
+
+    populateHazardTable();
 }
 
 function populateStatTable() {
@@ -941,6 +943,42 @@ function populateTypeCoverageTable() {
             }
         }
     }
+}
+
+function populateHazardTable() {
+    var defog = 0;
+    var rapidSpin = 0;
+
+    var rocks = 0;
+    var spikes = 0;
+    var tspikes = 0;
+    var lscreen = 0;
+    var reflect = 0;
+
+    for (var pokemon in team) {
+        if (team.hasOwnProperty(pokemon)) {
+            var mon = team[pokemon];
+            var learnset = learnsets[mon.name].learnset;
+
+            if (learnset["defog"] !== undefined) defog++;
+            if (learnset["rapidspin"] !== undefined) rapidSpin++;
+
+            if (learnset["stealthrock"] !== undefined) rocks++;
+            if (learnset["spikes"] !== undefined) spikes++;
+            if (learnset["toxicspikes"] !== undefined) tspikes++;
+            if (learnset["lightscreen"] !== undefined) lscreen++;
+            if (learnset["reflect"] !== undefined) reflect++;
+        }
+    }
+
+    document.getElementById("defoggers").innerText = defog + "";
+    document.getElementById("spinners").innerText = rapidSpin + "";
+
+    document.getElementById("rocks").innerText = rocks + "";
+    document.getElementById("spikes").innerText = spikes + "";
+    document.getElementById("tSpikes").innerText = tspikes + "";
+    document.getElementById("lScreen").innerText = lscreen + "";
+    document.getElementById("reflect").innerText = reflect + "";
 }
 
 function setTypeCoverage(type, stab) {
