@@ -687,7 +687,7 @@ function populateOverview() {
         document.getElementById("immune").innerHTML = immune.toString();
     }
 
-    populateHazardTable();
+    //populateHazardTable();
 }
 
 function populateStatTable() {
@@ -879,7 +879,7 @@ function populateTypeCoverageTable() {
                     hasMoveType[move1.type] = move1.basePower !== 0;
                     hasStabMoveType[move1.type] = team[pokemon].types[0] === move1.type;
 
-                    if (team[pokemon].types[1] !== undefined) {
+                    if (team[pokemon].types[1] !== undefined && hasStabMoveType[move1.type] == false) {
                         hasStabMoveType[move1.type] = team[pokemon].types[1] === move1.type;
                     }
                 } else {
@@ -894,7 +894,7 @@ function populateTypeCoverageTable() {
                 hasMoveType[move2.type] = move2.basePower !== 0;
                 hasStabMoveType[move2.type] = team[pokemon].types[0] === move2.type;
 
-                if (team[pokemon].types[1] !== undefined) {
+                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move2.type] == false) {
                     hasStabMoveType[move2.type] = team[pokemon].types[1] === move2.type;
                 }
             } else {
@@ -908,7 +908,7 @@ function populateTypeCoverageTable() {
                 hasMoveType[move3.type] = move3.basePower !== 0;
                 hasStabMoveType[move3.type] = team[pokemon].types[0] === move3.type;
 
-                if (team[pokemon].types[1] !== undefined) {
+                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move3.type] == false) {
                     hasStabMoveType[move3.type] = team[pokemon].types[1] === move3.type;
                 }
             } else {
@@ -922,7 +922,7 @@ function populateTypeCoverageTable() {
                 hasMoveType[move4.type] = move4.basePower !== 0;
                 hasStabMoveType[move4.type] = team[pokemon].types[0] === move4.type;
 
-                if (team[pokemon].types[1] !== undefined) {
+                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move4.type] == false) {
                     hasStabMoveType[move4.type] = team[pokemon].types[1] === move4.type;
                 }
             } else {
