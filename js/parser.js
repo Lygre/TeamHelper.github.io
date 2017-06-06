@@ -943,6 +943,10 @@ function populateTypeCoverageTable() {
     }
 }
 
+function populateHazardTable() {
+
+}
+
 function setTypeCoverage(type, stab) {
     if (stab) {
         var span = document.getElementById(type.toLowerCase() + "Stab");
