@@ -874,7 +874,7 @@ function populateTypeCoverageTable() {
     for (var pokemon in team) {
         if (team.hasOwnProperty(pokemon)) {
             if (team[pokemon].move1 !== undefined) {
-                var move1Name = team[pokemon].move1.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+                var move1Name = team[pokemon].move1.toLowerCase().replaceAll("-", "").replaceAll(" ", "").replaceAll("'", "");
                 var move1 = movedex[move1Name];
                 if (move1 !== undefined) {
                     hasMoveType[move1.type] = move1.basePower !== 0;
@@ -889,7 +889,7 @@ function populateTypeCoverageTable() {
             }
         }
         if (team[pokemon].move2 !== undefined) {
-            var move2Name = team[pokemon].move2.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+            var move2Name = team[pokemon].move2.toLowerCase().replaceAll("-", "").replaceAll(" ", "").replaceAll("'", "");
             var move2 = movedex[move2Name];
             if (move2 !== undefined) {
                 hasMoveType[move2.type] = move2.basePower !== 0;
@@ -903,7 +903,7 @@ function populateTypeCoverageTable() {
             }
         }
         if (team[pokemon].move3 !== undefined) {
-            var move3Name = team[pokemon].move3.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+            var move3Name = team[pokemon].move3.toLowerCase().replaceAll("-", "").replaceAll(" ", "").replaceAll("'", "");
             var move3 = movedex[move3Name];
             if (move3 !== undefined) {
                 hasMoveType[move3.type] = move3.basePower !== 0;
@@ -917,7 +917,7 @@ function populateTypeCoverageTable() {
             }
         }
         if (team[pokemon].move4 !== undefined) {
-            var move4Name = team[pokemon].move4.toLowerCase().replaceAll("-", "").replaceAll(" ", "");
+            var move4Name = team[pokemon].move4.toLowerCase().replaceAll("-", "").replaceAll(" ", "").replaceAll("'", "");
             var move4 = movedex[move4Name];
             if (move4 !== undefined) {
                 hasMoveType[move4.type] = move4.basePower !== 0;

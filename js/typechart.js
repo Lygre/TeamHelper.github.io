@@ -19,7 +19,7 @@ var typeMatchups = {
             "Rock": 1,
             "Steel": 0,
             "Water": 0
-        },
+        }
     },
     "Dark": {
         damageTaken: {
