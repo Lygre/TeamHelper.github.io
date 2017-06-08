@@ -7,7 +7,7 @@ var natureList = {
     },
     lonely: {
         atk: 1.1,
-        def: .9
+        def: 0.9
     },
     brave: {
         atk: 1.1,
@@ -173,110 +173,6 @@ function parseInput() {
     populateTypeCoverageTable();
 }
 
-function parsePokemon(raw) {
-    var lines = raw.split("\n");
-    if (lines.length < 2) {
-        lines[0] = raw;
-    }
-    var offset = 0;
-
-    var name = parsePokemonName(lines[0]);
-    if (dex[name] === undefined) {
-        return;
-    }
-    if (name.indexOf("@") > -1) {
-        var item = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
-    }
-    var types = dex[name].types;
-    var weaknesses = getPokemonWeaknesses(name);
-
-    if (lines.length > 1) {
-        var ability = lines[1].substring(lines[1].indexOf(" ") + 1, lines[1].length);
-
-        var level = 0;
-        if (lines[2].indexOf("/") < 0) {
-            level = lines[2].substring(lines[2].indexOf(" ") + 1);
-            offset++;
-        } else {
-            level = 100;
-        }
-
-        var evs = parseEVs(lines[2 + offset].substring(lines[2 + offset].indexOf(" ") + 1).split(" / "));
-        var nature = lines[3 + offset].substring(0, lines[3 + offset].indexOf(" "));
-
-        var ivs;
-        if (lines[4 + offset].indexOf("-") < 0) {
-            ivs = parseIVs(lines[4 + offset].substring(lines[4 + offset].indexOf(" ") + 1).split(" / "));
-            offset++;
-        } else {
-            ivs = {
-                hp: 31,
-                atk: 31,
-                def: 31,
-                spa: 31,
-                spd: 31,
-                spe: 31
-            };
-        }
-        console.log(evs);
-        console.log(ivs);
-
-        var move1 = lines[4 + offset].substring(lines[4 + offset].indexOf("-") + 1, lines[4 + offset].length).replace("[", "").replace("]", "");
-        var move2 = lines[5 + offset].substring(lines[5 + offset].indexOf("-") + 1, lines[5 + offset].length).replace("[", "").replace("]", "");
-        var move3 = lines[6 + offset].substring(lines[6 + offset].indexOf("-") + 1, lines[6 + offset].length).replace("[", "").replace("]", "");
-        var move4 = lines[7 + offset].substring(lines[7 + offset].indexOf("-") + 1, lines[7 + offset].length).replace("[", "").replace("]", "");
-
-        return {
-            name: name,
-            level: level,
-            types: types,
-            weaknesses: weaknesses,
-            item: item,
-            ability: ability,
-            nature: nature,
-            evs: evs,
-            ivs: ivs,
-            move1: move1,
-            move2: move2,
-            move3: move3,
-            move4: move4
-        }
-    } else {
-        ivs = {
-            hp: 0,
-            atk: 0,
-            def: 0,
-            spa: 0,
-            spd: 0,
-            spe: 0
-        };
-        evs = {
-            hp: 0,
-            atk: 0,
-            def: 0,
-            spa: 0,
-            spd: 0,
-            spe: 0
-        };
-
-        return {
-            name: name,
-            level: 100,
-            types: types,
-            weaknesses: weaknesses,
-            item: undefined,
-            ability: undefined,
-            nature: "serious",
-            evs: evs,
-            ivs: ivs,
-            move1: undefined,
-            move2: undefined,
-            move3: undefined,
-            move4: undefined
-        }
-    }
-}
-
 function parsePokemonName(name) {
     if (name.indexOf("(") > -1) {
         name = name.substring(name.indexOf("(") + 1, name.indexOf(")")).toLowerCase();
@@ -362,6 +258,111 @@ function parsePokemonName(name) {
     name = name.replaceAll(".", "");
     name = name.replaceAll("'", "");
     return name;
+}
+
+function parsePokemon(raw) {
+    var lines = raw.split("\n");
+    if (lines.length < 2) {
+        lines[0] = raw;
+    }
+    var offset = 0;
+
+    var name = parsePokemonName(lines[0]);
+    if (dex[name] === undefined) {
+        return;
+    }
+    if (name.indexOf("@") > -1) {
+        var item = lines[0].substring(lines[0].indexOf("@") + 2, lines[0].length);
+    }
+    var types = dex[name].types;
+    var weaknesses = getPokemonWeaknesses(name);
+
+    if (lines.length > 1) {
+        var ability = lines[1].substring(lines[1].indexOf(" ") + 1, lines[1].length);
+
+        var level = 0;
+        if (lines[2].indexOf("/") < 0) {
+            level = lines[2].substring(lines[2].indexOf(" ") + 1);
+            offset++;
+        } else {
+            level = 100;
+        }
+
+        var evs = parseEVs(lines[2 + offset].substring(lines[2 + offset].indexOf(" ") + 1).split(" / "));
+        var nature = lines[3 + offset].substring(0, lines[3 + offset].indexOf(" "));
+
+        var ivs;
+        if (lines[4 + offset].indexOf("-") < 0) {
+            ivs = parseIVs(lines[4 + offset].substring(lines[4 + offset].indexOf(" ") + 1).split(" / "));
+            offset++;
+        } else {
+            ivs = {
+                hp: 31,
+                atk: 31,
+                def: 31,
+                spa: 31,
+                spd: 31,
+                spe: 31
+            };
+        }
+        console.log(evs);
+        console.log(ivs);
+
+        var move1 = lines[4 + offset].substring(lines[4 + offset].indexOf("-") + 1, lines[4 + offset].length).replace("[", "").replace("]", "");
+        var move2 = lines[5 + offset].substring(lines[5 + offset].indexOf("-") + 1, lines[5 + offset].length).replace("[", "").replace("]", "");
+        var move3 = lines[6 + offset].substring(lines[6 + offset].indexOf("-") + 1, lines[6 + offset].length).replace("[", "").replace("]", "");
+        var move4 = lines[7 + offset].substring(lines[7 + offset].indexOf("-") + 1, lines[7 + offset].length).replace("[", "").replace("]", "");
+        
+
+        return {
+            name: name,
+            level: level,
+            types: types,
+            weaknesses: weaknesses,
+            item: item,
+            ability: ability,
+            nature: nature,
+            evs: evs,
+            ivs: ivs,
+            move1: move1,
+            move2: move2,
+            move3: move3,
+            move4: move4
+        };
+    } else {
+        ivs = {
+            hp: 0,
+            atk: 0,
+            def: 0,
+            spa: 0,
+            spd: 0,
+            spe: 0
+        };
+        evs = {
+            hp: 0,
+            atk: 0,
+            def: 0,
+            spa: 0,
+            spd: 0,
+            spe: 0
+        };
+
+        return {
+            name: name,
+            level: 100,
+            types: types,
+            weaknesses: weaknesses,
+            item: undefined,
+            ability: undefined,
+            nature: "serious",
+            evs: evs,
+            ivs: ivs,
+            move1: undefined,
+            move2: undefined,
+            move3: undefined,
+            move4: undefined
+        };
+    }
 }
 
 function parseEVs(rawEVs) {
@@ -879,7 +880,7 @@ function populateTypeCoverageTable() {
                     hasMoveType[move1.type] = move1.basePower !== 0;
                     hasStabMoveType[move1.type] = team[pokemon].types[0] === move1.type;
 
-                    if (team[pokemon].types[1] !== undefined && hasStabMoveType[move1.type] == false) {
+                    if (team[pokemon].types[1] !== undefined && hasStabMoveType[move1.type] == false && move1.basePower !== 0) {
                         hasStabMoveType[move1.type] = team[pokemon].types[1] === move1.type;
                     }
                 } else {
@@ -894,7 +895,7 @@ function populateTypeCoverageTable() {
                 hasMoveType[move2.type] = move2.basePower !== 0;
                 hasStabMoveType[move2.type] = team[pokemon].types[0] === move2.type;
 
-                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move2.type] == false) {
+                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move2.type] == false && move2.basePower !== 0) {
                     hasStabMoveType[move2.type] = team[pokemon].types[1] === move2.type;
                 }
             } else {
@@ -908,7 +909,7 @@ function populateTypeCoverageTable() {
                 hasMoveType[move3.type] = move3.basePower !== 0;
                 hasStabMoveType[move3.type] = team[pokemon].types[0] === move3.type;
 
-                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move3.type] == false) {
+                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move3.type] == false && move3.basePower !== 0) {
                     hasStabMoveType[move3.type] = team[pokemon].types[1] === move3.type;
                 }
             } else {
@@ -922,7 +923,7 @@ function populateTypeCoverageTable() {
                 hasMoveType[move4.type] = move4.basePower !== 0;
                 hasStabMoveType[move4.type] = team[pokemon].types[0] === move4.type;
 
-                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move4.type] == false) {
+                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move4.type] == false && move4.basePower !== 0) {
                     hasStabMoveType[move4.type] = team[pokemon].types[1] === move4.type;
                 }
             } else {
@@ -958,7 +959,7 @@ function populateHazardTable() {
     for (var pokemon in team) {
         if (team.hasOwnProperty(pokemon)) {
             var mon = team[pokemon];
-            var learnset = learnsets[mon.name].learnset;
+            var learnset = learnsets[pokemon.name].learnset;
 
             if (learnset["defog"] !== undefined) defog++;
             if (learnset["rapidspin"] !== undefined) rapidSpin++;
