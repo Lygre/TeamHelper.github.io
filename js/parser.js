@@ -171,6 +171,7 @@ function parseInput() {
     populateStatTable();
     populateWeaknessTable();
     populateTypeCoverageTable();
+    //populateHazardTable();
 }
 
 function parsePokemonName(name) {
@@ -451,6 +452,15 @@ function calcStat(pokemon, stat, ev, iv) {
         }
         return Math.floor(Math.floor((2 * b + i + e) * l / 100 + 5) * n);
     }
+}
+
+function calcHarm(pokemon) {
+    var D = calcStat(pokemon, "def", pokemon.evs.def, pokemon.ivs.def);
+    var S = calcStat(pokemon, "spd", pokemon.evs.spd, pokemon.ivs.spd);
+    var H = calcStat(pokemon, "hp", pokemon.evs.hp, pokemon.ivs.hp);
+    var harm = (((D + S) + 4 * D * S) / (H * D * S));
+    
+    return harm;
 }
 
 function getPokemonWeaknesses(pokemonName) {
@@ -878,7 +888,7 @@ function populateTypeCoverageTable() {
                 var move1 = movedex[move1Name];
                 if (move1 !== undefined) {
                     hasMoveType[move1.type] = move1.basePower !== 0;
-                    hasStabMoveType[move1.type] = team[pokemon].types[0] === move1.type;
+                    if (move1.basePower !== 0) { hasStabMoveType[move1.type] = team[pokemon].types[0] === move1.type; }
 
                     if (team[pokemon].types[1] !== undefined && hasStabMoveType[move1.type] == false && move1.basePower !== 0) {
                         hasStabMoveType[move1.type] = team[pokemon].types[1] === move1.type;
@@ -893,7 +903,7 @@ function populateTypeCoverageTable() {
             var move2 = movedex[move2Name];
             if (move2 !== undefined) {
                 hasMoveType[move2.type] = move2.basePower !== 0;
-                hasStabMoveType[move2.type] = team[pokemon].types[0] === move2.type;
+                if (move2.basePower !== 0) { hasStabMoveType[move2.type] = team[pokemon].types[0] === move2.type; }
 
                 if (team[pokemon].types[1] !== undefined && hasStabMoveType[move2.type] == false && move2.basePower !== 0) {
                     hasStabMoveType[move2.type] = team[pokemon].types[1] === move2.type;
@@ -907,7 +917,7 @@ function populateTypeCoverageTable() {
             var move3 = movedex[move3Name];
             if (move3 !== undefined) {
                 hasMoveType[move3.type] = move3.basePower !== 0;
-                hasStabMoveType[move3.type] = team[pokemon].types[0] === move3.type;
+                if (move3.basePower !== 0) { hasStabMoveType[move3.type] = team[pokemon].types[0] === move3.type; }
 
                 if (team[pokemon].types[1] !== undefined && hasStabMoveType[move3.type] == false && move3.basePower !== 0) {
                     hasStabMoveType[move3.type] = team[pokemon].types[1] === move3.type;
@@ -921,7 +931,7 @@ function populateTypeCoverageTable() {
             var move4 = movedex[move4Name];
             if (move4 !== undefined) {
                 hasMoveType[move4.type] = move4.basePower !== 0;
-                hasStabMoveType[move4.type] = team[pokemon].types[0] === move4.type;
+                if (move4.basePower !== 0) { hasStabMoveType[move4.type] = team[pokemon].types[0] === move4.type; }
 
                 if (team[pokemon].types[1] !== undefined && hasStabMoveType[move4.type] == false && move4.basePower !== 0) {
                     hasStabMoveType[move4.type] = team[pokemon].types[1] === move4.type;
@@ -955,10 +965,9 @@ function populateHazardTable() {
     var tspikes = 0;
     var lscreen = 0;
     var reflect = 0;
-
-    for (var pokemon in team) {
-        if (team.hasOwnProperty(pokemon)) {
-            var mon = team[pokemon];
+    for (var j = 0; j < team.length; j++) {
+        var pokemon = team[j];
+        if (pokemon !== undefined) {
             var learnset = learnsets[pokemon.name].learnset;
 
             if (learnset["defog"] !== undefined) defog++;
