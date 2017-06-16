@@ -886,11 +886,22 @@ function populateTypeCoverageTable() {
             if (team[pokemon].move1 !== undefined) {
                 var move1Name = team[pokemon].move1.toLowerCase().replaceAll("-", "").replaceAll(" ", "").replaceAll("'", "");
                 var move1 = movedex[move1Name];
+                var move1Desc = movedex[move1Name].desc;
+                var move1VariablePower = move1Desc.search("Power is equal");
                 if (move1 !== undefined) {
-                    hasMoveType[move1.type] = move1.basePower !== 0;
-                    if (move1.basePower !== 0) { hasStabMoveType[move1.type] = team[pokemon].types[0] === move1.type; }
-
-                    if (team[pokemon].types[1] !== undefined && hasStabMoveType[move1.type] == false && move1.basePower !== 0) {
+                    if (move1VariablePower === -1 && move1.category !== "Status") {
+                        hasMoveType[move1.type] = move1.basePower !== 0;
+                    } else {
+                        if (move1VariablePower !== -1) {
+                            hasMoveType[move1.type] = true;                    
+                        }
+                    }
+                    if (move1.basePower !== 0 && move1VariablePower === -1) { 
+                        hasStabMoveType[move1.type] = team[pokemon].types[0] === move1.type; 
+                    } else if (move1.basePower === 0 && move1VariablePower !== -1) {
+                        hasStabMoveType[move1.type] = team[pokemon].types[0] === move1.type; 
+                    }
+                    if (team[pokemon].types[1] !== undefined && hasStabMoveType[move1.type] == false && move1.basePower !== 0 || team[pokemon].types[1] !== undefined && hasStabMoveType[move1.type] == false && move1.basePower === 0 && move1VariablePower !== -1) {
                         hasStabMoveType[move1.type] = team[pokemon].types[1] === move1.type;
                     }
                 } else {
@@ -901,11 +912,23 @@ function populateTypeCoverageTable() {
         if (team[pokemon].move2 !== undefined) {
             var move2Name = team[pokemon].move2.toLowerCase().replaceAll("-", "").replaceAll(" ", "").replaceAll("'", "");
             var move2 = movedex[move2Name];
-            if (move2 !== undefined) {
-                hasMoveType[move2.type] = move2.basePower !== 0;
-                if (move2.basePower !== 0) { hasStabMoveType[move2.type] = team[pokemon].types[0] === move2.type; }
+            var move2Desc = movedex[move2Name].desc;
+            var move2VariablePower = move2Desc.search("Power is equal");
 
-                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move2.type] == false && move2.basePower !== 0) {
+            if (move2 !== undefined) {
+                if (move2VariablePower === -1 && move2.category !== "Status") {
+                    hasMoveType[move2.type] = move2.basePower !== 0;
+                } else {
+                    if (move2VariablePower !== -1) {
+                        hasMoveType[move2.type] = true;                    
+                    }
+                }
+                if (move2.basePower !== 0 && move2VariablePower === -1) {
+                    hasStabMoveType[move2.type] = team[pokemon].types[0] === move2.type; 
+                } else if (move2.basePower === 0 && move2VariablePower !== -1) {
+                    hasStabMoveType[move2.type] = team[pokemon].types[0] === move2.type;
+                }
+                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move2.type] == false && move2.basePower !== 0 || team[pokemon].types[1] !== undefined && hasStabMoveType[move2.type] == false && move2.basePower === 0 && move2VariablePower !== -1) {
                     hasStabMoveType[move2.type] = team[pokemon].types[1] === move2.type;
                 }
             } else {
@@ -915,11 +938,23 @@ function populateTypeCoverageTable() {
         if (team[pokemon].move3 !== undefined) {
             var move3Name = team[pokemon].move3.toLowerCase().replaceAll("-", "").replaceAll(" ", "").replaceAll("'", "");
             var move3 = movedex[move3Name];
-            if (move3 !== undefined) {
-                hasMoveType[move3.type] = move3.basePower !== 0;
-                if (move3.basePower !== 0) { hasStabMoveType[move3.type] = team[pokemon].types[0] === move3.type; }
+            var move3Desc = movedex[move3Name].desc;
+            var move3VariablePower = move3Desc.search("Power is equal");
 
-                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move3.type] == false && move3.basePower !== 0) {
+            if (move3 !== undefined) {
+                if (move3VariablePower === -1 && move3.category !== "Status") {
+                    hasMoveType[move3.type] = move3.basePower !== 0;                   
+                } else {
+                    if (move3VariablePower !== -1) {
+                        hasMoveType[move3.type] = true;                    
+                    }
+                }
+                if (move3.basePower !== 0 && move3VariablePower === -1) {
+                    hasStabMoveType[move3.type] = team[pokemon].types[0] === move3.type; 
+                } else if (move3.basePower === 0 && move3VariablePower !== -1) {
+                    hasStabMoveType[move3.type] = team[pokemon].types[0] === move3.type;
+                }
+                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move3.type] == false && move3.basePower !== 0 || team[pokemon].types[1] !== undefined && hasStabMoveType[move3.type] == false && move3.basePower === 0 && move3VariablePower !== -1) {
                     hasStabMoveType[move3.type] = team[pokemon].types[1] === move3.type;
                 }
             } else {
@@ -929,11 +964,23 @@ function populateTypeCoverageTable() {
         if (team[pokemon].move4 !== undefined) {
             var move4Name = team[pokemon].move4.toLowerCase().replaceAll("-", "").replaceAll(" ", "").replaceAll("'", "");
             var move4 = movedex[move4Name];
-            if (move4 !== undefined) {
-                hasMoveType[move4.type] = move4.basePower !== 0;
-                if (move4.basePower !== 0) { hasStabMoveType[move4.type] = team[pokemon].types[0] === move4.type; }
+            var move4Desc = movedex[move4Name].desc;
+            var move4VariablePower = move4Desc.search("Power is equal");
 
-                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move4.type] == false && move4.basePower !== 0) {
+            if (move4 !== undefined) {
+                if (move4VariablePower === -1 && move4.category !== "Status") {
+                    hasMoveType[move4.type] = move4.basePower !== 0;
+                } else {
+                    if (move4VariablePower !== -1) {
+                        hasMoveType[move4.type] = true;                    
+                    }
+                }
+                if (move4.basePower !== 0 && move4VariablePower === -1) {
+                    hasStabMoveType[move4.type] = team[pokemon].types[0] === move4.type; 
+                } else if (move4.basePower === 0 && move4VariablePower !== -1) {
+                    hasStabMoveType[move4.type] = team[pokemon].types[0] === move4.type;
+                }
+                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move4.type] == false && move4.basePower !== 0 || team[pokemon].types[1] !== undefined && hasStabMoveType[move4.type] == false && move4.basePower === 0 && move4VariablePower !== -1) {
                     hasStabMoveType[move4.type] = team[pokemon].types[1] === move4.type;
                 }
             } else {
@@ -949,7 +996,7 @@ function populateTypeCoverageTable() {
                     setTypeCoverage(typeList[type], false);
                 }
                 if (hasStabMoveType[currTypeWeakness]) {
-                    setTypeCoverage(typeList[type], true)
+                    setTypeCoverage(typeList[type], true);
                 }
             }
         }
