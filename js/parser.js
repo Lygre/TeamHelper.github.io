@@ -171,7 +171,7 @@ function parseInput() {
     populateStatTable();
     populateWeaknessTable();
     populateTypeCoverageTable();
-    //populateHazardTable();
+   // populateHazardTable();
 }
 
 function parsePokemonName(name) {
@@ -279,7 +279,7 @@ function parsePokemon(raw) {
     var weaknesses = getPokemonWeaknesses(name);
 
     if (lines.length > 1) {
-        var ability = lines[1].substring(lines[1].indexOf(" ") + 1, lines[1].length);
+        var ability = lines[1].substring(lines[1].indexOf(" ") + 1, lines[1].length - 2);
 
         var level = 0;
         if (lines[2].indexOf("/") < 0) {
@@ -896,13 +896,17 @@ function populateTypeCoverageTable() {
                             hasMoveType[move1.type] = true;                    
                         }
                     }
-                    if (move1.basePower !== 0 && move1VariablePower === -1) { 
-                        hasStabMoveType[move1.type] = team[pokemon].types[0] === move1.type; 
-                    } else if (move1.basePower === 0 && move1VariablePower !== -1) {
-                        hasStabMoveType[move1.type] = team[pokemon].types[0] === move1.type; 
-                    }
-                    if (team[pokemon].types[1] !== undefined && hasStabMoveType[move1.type] == false && move1.basePower !== 0 || team[pokemon].types[1] !== undefined && hasStabMoveType[move1.type] == false && move1.basePower === 0 && move1VariablePower !== -1) {
-                        hasStabMoveType[move1.type] = team[pokemon].types[1] === move1.type;
+                    if (team[pokemon].ability === "Protean") {
+                        hasStabMoveType[move1.type] = move1.basePower !== 0;
+                    } else {
+                        if (move1.basePower !== 0 && move1VariablePower === -1) { 
+                            hasStabMoveType[move1.type] = team[pokemon].types[0] === move1.type; 
+                        } else if (move1.basePower === 0 && move1VariablePower !== -1) {
+                            hasStabMoveType[move1.type] = team[pokemon].types[0] === move1.type; 
+                        }
+                        if (team[pokemon].types[1] !== undefined && hasStabMoveType[move1.type] == false && move1.basePower !== 0 || team[pokemon].types[1] !== undefined && hasStabMoveType[move1.type] == false && move1.basePower === 0 && move1VariablePower !== -1) {
+                            hasStabMoveType[move1.type] = team[pokemon].types[1] === move1.type;
+                        }
                     }
                 } else {
                     alert("Unkown move: '" + team[pokemon].move1 + "'");
@@ -923,13 +927,17 @@ function populateTypeCoverageTable() {
                         hasMoveType[move2.type] = true;                    
                     }
                 }
-                if (move2.basePower !== 0 && move2VariablePower === -1) {
-                    hasStabMoveType[move2.type] = team[pokemon].types[0] === move2.type; 
-                } else if (move2.basePower === 0 && move2VariablePower !== -1) {
-                    hasStabMoveType[move2.type] = team[pokemon].types[0] === move2.type;
-                }
-                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move2.type] == false && move2.basePower !== 0 || team[pokemon].types[1] !== undefined && hasStabMoveType[move2.type] == false && move2.basePower === 0 && move2VariablePower !== -1) {
-                    hasStabMoveType[move2.type] = team[pokemon].types[1] === move2.type;
+                if (team[pokemon].ability === "Protean") {
+                    hasStabMoveType[move2.type] = move2.basePower !== 0;
+                } else {
+                    if (move2.basePower !== 0 && move2VariablePower === -1) {
+                        hasStabMoveType[move2.type] = team[pokemon].types[0] === move2.type; 
+                    } else if (move2.basePower === 0 && move2VariablePower !== -1) {
+                        hasStabMoveType[move2.type] = team[pokemon].types[0] === move2.type;
+                    }
+                    if (team[pokemon].types[1] !== undefined && hasStabMoveType[move2.type] == false && move2.basePower !== 0 || team[pokemon].types[1] !== undefined && hasStabMoveType[move2.type] == false && move2.basePower === 0 && move2VariablePower !== -1) {
+                        hasStabMoveType[move2.type] = team[pokemon].types[1] === move2.type;
+                    }
                 }
             } else {
                 alert("Unknown move: '" + team[pokemon].move2 + "'");
@@ -949,13 +957,17 @@ function populateTypeCoverageTable() {
                         hasMoveType[move3.type] = true;                    
                     }
                 }
-                if (move3.basePower !== 0 && move3VariablePower === -1) {
-                    hasStabMoveType[move3.type] = team[pokemon].types[0] === move3.type; 
-                } else if (move3.basePower === 0 && move3VariablePower !== -1) {
-                    hasStabMoveType[move3.type] = team[pokemon].types[0] === move3.type;
-                }
-                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move3.type] == false && move3.basePower !== 0 || team[pokemon].types[1] !== undefined && hasStabMoveType[move3.type] == false && move3.basePower === 0 && move3VariablePower !== -1) {
-                    hasStabMoveType[move3.type] = team[pokemon].types[1] === move3.type;
+                if (team[pokemon].ability === "Protean") {
+                    hasStabMoveType[move3.type] = move3.basePower !== 0;
+                } else {
+                    if (move3.basePower !== 0 && move3VariablePower === -1) {
+                        hasStabMoveType[move3.type] = team[pokemon].types[0] === move3.type; 
+                    } else if (move3.basePower === 0 && move3VariablePower !== -1) {
+                        hasStabMoveType[move3.type] = team[pokemon].types[0] === move3.type;
+                    }
+                    if (team[pokemon].types[1] !== undefined && hasStabMoveType[move3.type] == false && move3.basePower !== 0 || team[pokemon].types[1] !== undefined && hasStabMoveType[move3.type] == false && move3.basePower === 0 && move3VariablePower !== -1) {
+                        hasStabMoveType[move3.type] = team[pokemon].types[1] === move3.type;
+                    }
                 }
             } else {
                 alert("Unknown move: '" + team[pokemon].move3 + "'");
@@ -975,13 +987,17 @@ function populateTypeCoverageTable() {
                         hasMoveType[move4.type] = true;                    
                     }
                 }
-                if (move4.basePower !== 0 && move4VariablePower === -1) {
-                    hasStabMoveType[move4.type] = team[pokemon].types[0] === move4.type; 
-                } else if (move4.basePower === 0 && move4VariablePower !== -1) {
-                    hasStabMoveType[move4.type] = team[pokemon].types[0] === move4.type;
-                }
-                if (team[pokemon].types[1] !== undefined && hasStabMoveType[move4.type] == false && move4.basePower !== 0 || team[pokemon].types[1] !== undefined && hasStabMoveType[move4.type] == false && move4.basePower === 0 && move4VariablePower !== -1) {
-                    hasStabMoveType[move4.type] = team[pokemon].types[1] === move4.type;
+                if (team[pokemon].ability === "Protean") {
+                    hasStabMoveType[move4.type] = move4.basePower !== 0;
+                } else {
+                    if (move4.basePower !== 0 && move4VariablePower === -1) {
+                        hasStabMoveType[move4.type] = team[pokemon].types[0] === move4.type; 
+                    } else if (move4.basePower === 0 && move4VariablePower !== -1) {
+                        hasStabMoveType[move4.type] = team[pokemon].types[0] === move4.type;
+                    }
+                    if (team[pokemon].types[1] !== undefined && hasStabMoveType[move4.type] == false && move4.basePower !== 0 || team[pokemon].types[1] !== undefined && hasStabMoveType[move4.type] == false && move4.basePower === 0 && move4VariablePower !== -1) {
+                        hasStabMoveType[move4.type] = team[pokemon].types[1] === move4.type;
+                    }
                 }
             } else {
                 alert("Unknown move: '" + team[pokemon].move4 + "'");
