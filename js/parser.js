@@ -171,7 +171,7 @@ function parseInput() {
     populateStatTable();
     populateWeaknessTable();
     populateTypeCoverageTable();
-   // populateHazardTable();
+    populateHazardTable();
 }
 
 function parsePokemonName(name) {
@@ -1018,7 +1018,12 @@ function populateTypeCoverageTable() {
         }
     }
 }
-
+function learnsetName(pokemon) {
+    var name = pokemon.name;
+    name = name.replace("therian", "");
+    name = name.replace("mega", "");
+    return name; 
+}
 function populateHazardTable() {
     var defog = 0;
     var rapidSpin = 0;
@@ -1028,10 +1033,12 @@ function populateHazardTable() {
     var tspikes = 0;
     var lscreen = 0;
     var reflect = 0;
+    var auroraVeil = 0;
     for (var j = 0; j < team.length; j++) {
-        var pokemon = team[j];
+        var poke = team[j];
+        var pokemon = learnsetName(poke);
         if (pokemon !== undefined) {
-            var learnset = learnsets[pokemon.name].learnset;
+            var learnset = learnsets[pokemon].learnset;
 
             if (learnset["defog"] !== undefined) defog++;
             if (learnset["rapidspin"] !== undefined) rapidSpin++;
@@ -1041,6 +1048,7 @@ function populateHazardTable() {
             if (learnset["toxicspikes"] !== undefined) tspikes++;
             if (learnset["lightscreen"] !== undefined) lscreen++;
             if (learnset["reflect"] !== undefined) reflect++;
+            if (learnset["auroraveil"] !== undefined) auroraVeil++;
         }
     }
 
@@ -1052,6 +1060,7 @@ function populateHazardTable() {
     document.getElementById("tSpikes").innerText = tspikes + "";
     document.getElementById("lScreen").innerText = lscreen + "";
     document.getElementById("reflect").innerText = reflect + "";
+    document.getElementById("auroraVeil").innerText = auroraVeil + "";
 }
 
 function setTypeCoverage(type, stab) {
